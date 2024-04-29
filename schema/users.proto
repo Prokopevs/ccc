@@ -9,78 +9,36 @@ service Users {
   rpc AddUser(AddUserRequest) returns (AddUserResponse) {}
   // GetUser - get user by id.
   rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
-  // GetUserByEmail - get user by email.
-  rpc GetUserByEmail(GetUserByEmailRequest) returns (GetUserByEmailResponse) {}
-  // IsUserWithEmailExists - get user by email
-  rpc IsUserWithEmailExists(IsUserWithEmailExistsRequest) returns (IsUserWithEmailExistsResponse) {}
-  // IsValidUserCredentials - check if user with given credentials exists.
-  rpc IsValidUserCredentials(IsValidUserCredentialsRequest) returns (IsValidUserCredentialsResponse) {}
-  // UpdateUser - update user by id.
-  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {}
+  // IsUserWithIdExists - check if user with id exist
+  rpc IsUserWithIdExists(IsUserWithIdExistsRequest) returns (IsUserWithIdExistsResponse) {}
 }
 
 message AddUserRequest {
-  string name = 1;
-  string user_name = 2;
-  string email = 3;
-  string password_hash = 4;
+  int64 id = 1;
+  string firstname = 2;
+  string username = 3;
 }
 
 message GetUserRequest {
-  string id = 1;
+  int64 id = 1;
 }
 
-message GetUserByEmailRequest {
-  string email = 1;
+message IsUserWithIdExistsRequest {
+  int64 id = 1;
 }
 
-message IsUserWithEmailExistsRequest {
-  string email = 1;
-}
-
-message IsValidUserCredentialsRequest {
-  string email = 1;
-  string password_hash = 2;
-}
-
-message GetUsersRequest {
-  repeated string ids = 1;
-}
-
-message AddUserResponse {
-  string id = 1;
-}
-
-message IsUserWithEmailExistsResponse {
-  bool exists = 1;
-}
+message AddUserResponse {}
 
 message GetUserResponse {
   User user = 1;
 }
 
-message GetUserByEmailResponse {
-  User user = 1;
-}
-
-message IsValidUserCredentialsResponse {
-  bool is_valid = 1;
-}
-
-message UpdateUserRequest {
-  string name = 1;
-  string user_name = 2;
-  string email = 3;
-  string password_hash = 4;
-}
-
-message UpdateUserResponse {}
-
 message User {
-  string id = 1;
-  string name = 2;
-  string user_name = 3;
-  string email = 4;
-  bool email_confirmed = 5;
+  int64 id = 1;
+  string firstname = 2;
+  string username = 3;
 }
 
+message IsUserWithIdExistsResponse {
+  bool exists = 1;
+}

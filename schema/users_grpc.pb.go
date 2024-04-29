@@ -19,12 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Users_AddUser_FullMethodName                = "/ccc.schema.Users/AddUser"
-	Users_GetUser_FullMethodName                = "/ccc.schema.Users/GetUser"
-	Users_GetUserByEmail_FullMethodName         = "/ccc.schema.Users/GetUserByEmail"
-	Users_IsUserWithEmailExists_FullMethodName  = "/ccc.schema.Users/IsUserWithEmailExists"
-	Users_IsValidUserCredentials_FullMethodName = "/ccc.schema.Users/IsValidUserCredentials"
-	Users_UpdateUser_FullMethodName             = "/ccc.schema.Users/UpdateUser"
+	Users_AddUser_FullMethodName            = "/ccc.schema.Users/AddUser"
+	Users_GetUser_FullMethodName            = "/ccc.schema.Users/GetUser"
+	Users_IsUserWithIdExists_FullMethodName = "/ccc.schema.Users/IsUserWithIdExists"
 )
 
 // UsersClient is the client API for Users service.
@@ -35,14 +32,8 @@ type UsersClient interface {
 	AddUser(ctx context.Context, in *AddUserRequest, opts ...grpc.CallOption) (*AddUserResponse, error)
 	// GetUser - get user by id.
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
-	// GetUserByEmail - get user by email.
-	GetUserByEmail(ctx context.Context, in *GetUserByEmailRequest, opts ...grpc.CallOption) (*GetUserByEmailResponse, error)
-	// IsUserWithEmailExists - get user by email
-	IsUserWithEmailExists(ctx context.Context, in *IsUserWithEmailExistsRequest, opts ...grpc.CallOption) (*IsUserWithEmailExistsResponse, error)
-	// IsValidUserCredentials - check if user with given credentials exists.
-	IsValidUserCredentials(ctx context.Context, in *IsValidUserCredentialsRequest, opts ...grpc.CallOption) (*IsValidUserCredentialsResponse, error)
-	// UpdateUser - update user by id.
-	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
+	// IsUserWithIdExists - check if user with id exist
+	IsUserWithIdExists(ctx context.Context, in *IsUserWithIdExistsRequest, opts ...grpc.CallOption) (*IsUserWithIdExistsResponse, error)
 }
 
 type usersClient struct {
@@ -71,36 +62,9 @@ func (c *usersClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...g
 	return out, nil
 }
 
-func (c *usersClient) GetUserByEmail(ctx context.Context, in *GetUserByEmailRequest, opts ...grpc.CallOption) (*GetUserByEmailResponse, error) {
-	out := new(GetUserByEmailResponse)
-	err := c.cc.Invoke(ctx, Users_GetUserByEmail_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *usersClient) IsUserWithEmailExists(ctx context.Context, in *IsUserWithEmailExistsRequest, opts ...grpc.CallOption) (*IsUserWithEmailExistsResponse, error) {
-	out := new(IsUserWithEmailExistsResponse)
-	err := c.cc.Invoke(ctx, Users_IsUserWithEmailExists_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *usersClient) IsValidUserCredentials(ctx context.Context, in *IsValidUserCredentialsRequest, opts ...grpc.CallOption) (*IsValidUserCredentialsResponse, error) {
-	out := new(IsValidUserCredentialsResponse)
-	err := c.cc.Invoke(ctx, Users_IsValidUserCredentials_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *usersClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error) {
-	out := new(UpdateUserResponse)
-	err := c.cc.Invoke(ctx, Users_UpdateUser_FullMethodName, in, out, opts...)
+func (c *usersClient) IsUserWithIdExists(ctx context.Context, in *IsUserWithIdExistsRequest, opts ...grpc.CallOption) (*IsUserWithIdExistsResponse, error) {
+	out := new(IsUserWithIdExistsResponse)
+	err := c.cc.Invoke(ctx, Users_IsUserWithIdExists_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -115,14 +79,8 @@ type UsersServer interface {
 	AddUser(context.Context, *AddUserRequest) (*AddUserResponse, error)
 	// GetUser - get user by id.
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
-	// GetUserByEmail - get user by email.
-	GetUserByEmail(context.Context, *GetUserByEmailRequest) (*GetUserByEmailResponse, error)
-	// IsUserWithEmailExists - get user by email
-	IsUserWithEmailExists(context.Context, *IsUserWithEmailExistsRequest) (*IsUserWithEmailExistsResponse, error)
-	// IsValidUserCredentials - check if user with given credentials exists.
-	IsValidUserCredentials(context.Context, *IsValidUserCredentialsRequest) (*IsValidUserCredentialsResponse, error)
-	// UpdateUser - update user by id.
-	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
+	// IsUserWithIdExists - check if user with id exist
+	IsUserWithIdExists(context.Context, *IsUserWithIdExistsRequest) (*IsUserWithIdExistsResponse, error)
 	mustEmbedUnimplementedUsersServer()
 }
 
@@ -136,17 +94,8 @@ func (UnimplementedUsersServer) AddUser(context.Context, *AddUserRequest) (*AddU
 func (UnimplementedUsersServer) GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
-func (UnimplementedUsersServer) GetUserByEmail(context.Context, *GetUserByEmailRequest) (*GetUserByEmailResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserByEmail not implemented")
-}
-func (UnimplementedUsersServer) IsUserWithEmailExists(context.Context, *IsUserWithEmailExistsRequest) (*IsUserWithEmailExistsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method IsUserWithEmailExists not implemented")
-}
-func (UnimplementedUsersServer) IsValidUserCredentials(context.Context, *IsValidUserCredentialsRequest) (*IsValidUserCredentialsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method IsValidUserCredentials not implemented")
-}
-func (UnimplementedUsersServer) UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
+func (UnimplementedUsersServer) IsUserWithIdExists(context.Context, *IsUserWithIdExistsRequest) (*IsUserWithIdExistsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsUserWithIdExists not implemented")
 }
 func (UnimplementedUsersServer) mustEmbedUnimplementedUsersServer() {}
 
@@ -197,74 +146,20 @@ func _Users_GetUser_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Users_GetUserByEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserByEmailRequest)
+func _Users_IsUserWithIdExists_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IsUserWithIdExistsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UsersServer).GetUserByEmail(ctx, in)
+		return srv.(UsersServer).IsUserWithIdExists(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Users_GetUserByEmail_FullMethodName,
+		FullMethod: Users_IsUserWithIdExists_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServer).GetUserByEmail(ctx, req.(*GetUserByEmailRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Users_IsUserWithEmailExists_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(IsUserWithEmailExistsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UsersServer).IsUserWithEmailExists(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Users_IsUserWithEmailExists_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServer).IsUserWithEmailExists(ctx, req.(*IsUserWithEmailExistsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Users_IsValidUserCredentials_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(IsValidUserCredentialsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UsersServer).IsValidUserCredentials(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Users_IsValidUserCredentials_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServer).IsValidUserCredentials(ctx, req.(*IsValidUserCredentialsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Users_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateUserRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UsersServer).UpdateUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Users_UpdateUser_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServer).UpdateUser(ctx, req.(*UpdateUserRequest))
+		return srv.(UsersServer).IsUserWithIdExists(ctx, req.(*IsUserWithIdExistsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -285,20 +180,8 @@ var Users_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Users_GetUser_Handler,
 		},
 		{
-			MethodName: "GetUserByEmail",
-			Handler:    _Users_GetUserByEmail_Handler,
-		},
-		{
-			MethodName: "IsUserWithEmailExists",
-			Handler:    _Users_IsUserWithEmailExists_Handler,
-		},
-		{
-			MethodName: "IsValidUserCredentials",
-			Handler:    _Users_IsValidUserCredentials_Handler,
-		},
-		{
-			MethodName: "UpdateUser",
-			Handler:    _Users_UpdateUser_Handler,
+			MethodName: "IsUserWithIdExists",
+			Handler:    _Users_IsUserWithIdExists_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
