@@ -1,27 +1,21 @@
-package core
+package core 
 
 import (
 	"context"
-
 	"github.com/Prokopevs/ccc/users/internal/pg"
 )
 
-var _ Service = (*ServiceImpl)(nil)
-
-type Service interface {
-	AddUser(context.Context, *User) error
-	GetUser(context.Context, string) (*User, bool, error)
-	GetUserByEmail(context.Context, string) (*User, bool, error)
-	IsUserWithEmailExists(context.Context, string) (bool, error)
-	IsValidUserCredentials(context.Context, string, string) (bool, error)
-	UpdateUser(context.Context, *User) error
+type DB interface {
+	AddUser(context.Context, *pg.User) (error)
+	GetUser(context.Context, int) (*pg.User, error)
+	IsUserWithIdExists(context.Context, int) (bool, error)
 }
 
 type ServiceImpl struct {
-	db pg.DB
+	db DB
 }
 
-func NewServiceImpl(db pg.DB) *ServiceImpl {
+func NewServiceImpl(db DB) *ServiceImpl {
 	return &ServiceImpl{
 		db: db,
 	}

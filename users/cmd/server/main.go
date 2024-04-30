@@ -13,6 +13,7 @@ import (
 	"github.com/Prokopevs/ccc/users/internal/core"
 	"github.com/Prokopevs/ccc/users/internal/pg"
 	"github.com/Prokopevs/ccc/users/internal/server"
+
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 )
@@ -20,7 +21,6 @@ import (
 const (
 	exitCodeInitError = 2
 )
-
 func run() error {
 	cfg, err := loadEnvConfig()
 	if err != nil {
@@ -34,13 +34,8 @@ func run() error {
 
 	service := core.NewServiceImpl(d)
 
-	loggerCfg := zap.NewProductionConfig()
-
-	logger, err := loggerCfg.Build()
-	if err != nil {
-		return err
-	}
-
+	logger, _ := zap.NewProduction()
+	defer logger.Sync()
 	sugaredLogger := logger.Sugar()
 
 	wg := &sync.WaitGroup{}
@@ -54,7 +49,7 @@ func run() error {
 	schema.RegisterUsersServer(grpcServer, grpcService)
 
 	sugaredLogger.Infow("GRPC server is starting.", "addr", listener.Addr())
-
+	
 	wg.Add(1)
 	go func() {
 		err = grpcServer.Serve(listener)

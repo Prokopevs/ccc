@@ -2,25 +2,25 @@ package pg
 
 import (
 	"context"
+	"time"
 )
 
 type User struct {
-	ID             string `db:"id"`
-	Name           string `db:"name"`
-	Email          string `db:"email"`
-	PasswordHash   string `db:"password_hash"`
-	EmailConfirmed bool   `db:"email_confirmed"`
+	Id        int        `db:"id,omitempty"`
+	Firstname string     `db:"firstname,omitempty"`
+	Username  string     `db:"username,omitempty"`
+	Createdat *time.Time `db:"createdat,omitempty"`
 }
 
 func (d *db) AddUser(ctx context.Context, u *User) error {
-	const q = "insert into users(name, email, email_confirmed, password_hash) values(:name, :email, :email_confirmed, :password_hash)"
+	const q = "insert into users(id, firstname, username, createdat) values(:id, :firstname, :username, :createdat)"
 
 	_, err := d.db.NamedExecContext(ctx, q, u)
 
 	return err
 }
 
-func (d *db) GetUser(ctx context.Context, id string) (*User, error) {
+func (d *db) GetUser(ctx context.Context, id int) (*User, error) {
 	const q = "select * from users where id=$1"
 
 	u := &User{}
@@ -29,45 +29,11 @@ func (d *db) GetUser(ctx context.Context, id string) (*User, error) {
 	return u, err
 }
 
-func (d *db) GetUserByEmail(ctx context.Context, email string) (*User, error) {
-	const q = "select * from users where email=$1"
-
-	u := &User{}
-	err := d.db.GetContext(ctx, u, q, email)
-	return u, err
-}
-
-func (d *db) IsUserWithIDExists(ctx context.Context, id string) (bool, error) {
+func (d *db) IsUserWithIdExists(ctx context.Context, id int) (bool, error) {
 	const q = "select exists(select from users where id=$1)"
 
 	exists := false
 	err := d.db.GetContext(ctx, &exists, q, id)
 
 	return exists, err
-}
-
-func (d *db) IsUserWithEmailExists(ctx context.Context, email string) (bool, error) {
-	const q = "select exists(select from users where email=$1)"
-
-	exists := false
-	err := d.db.GetContext(ctx, &exists, q, email)
-
-	return exists, err
-}
-
-func (d *db) IsUserWithEmailPasswordExists(ctx context.Context, email string, passwordHash string) (bool, error) {
-	const q = "select exists(select from users where email=$1 and password_hash=$2)"
-
-	exists := false
-	err := d.db.GetContext(ctx, &exists, q, email, passwordHash)
-
-	return exists, err
-}
-
-func (d *db) UpdateUser(ctx context.Context, u *User) error {
-	const q = "update users set email=coalesce(:email,email), email_confirmed=coalesce(:email_confirmed,email_confirmed), password_hash=coalesce(:password_hash,password_hash), name=coalesce(:name, name) where id=:id"
-
-	_, err := d.db.NamedExecContext(ctx, q, u)
-
-	return err
 }

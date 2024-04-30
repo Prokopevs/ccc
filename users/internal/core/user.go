@@ -2,29 +2,31 @@ package core
 
 import (
 	"context"
-	"errors"
+	"time"
 )
 
 type User struct {
-	ID             string
-	Name           string
-	Email          string
-	EmailConfirmed bool
-	PasswordHash   string
+	Id        int     
+	Firstname string     
+	Username  string     
 }
 
 func (s *ServiceImpl) AddUser(ctx context.Context, user *User) error {
-	return s.db.AddUser(ctx, user.toDB())
+	u := user.toDB()
+	now := time.Now()
+	u.Createdat = &now
+
+	return s.db.AddUser(ctx, u)
 }
 
-func (s *ServiceImpl) GetUser(ctx context.Context, id string) (*User, bool, error) {
-	exists, err := s.db.IsUserWithIDExists(ctx, id)
+func (s *ServiceImpl) GetUser(ctx context.Context, id int) (*User, bool, error) {
+	exists, err := s.db.IsUserWithIdExists(ctx, id)
 	if err != nil {
 		return nil, false, err
 	}
 
 	if !exists {
-		return nil, true, errors.New("user with such id does not exist")
+		return nil, true, ErrNoSuchUser
 	}
 
 	user, err := s.db.GetUser(ctx, id)
@@ -35,32 +37,6 @@ func (s *ServiceImpl) GetUser(ctx context.Context, id string) (*User, bool, erro
 	return convertDBUserToService(user), true, nil
 }
 
-func (s *ServiceImpl) GetUserByEmail(ctx context.Context, email string) (*User, bool, error) {
-	exists, err := s.db.IsUserWithEmailExists(ctx, email)
-	if err != nil {
-		return nil, false, err
-	}
-
-	if !exists {
-		return nil, true, errors.New("user with such email does not exist")
-	}
-
-	user, err := s.db.GetUserByEmail(ctx, email)
-	if err != nil {
-		return nil, false, err
-	}
-
-	return convertDBUserToService(user), true, nil
-}
-
-func (s *ServiceImpl) IsUserWithEmailExists(ctx context.Context, email string) (bool, error) {
-	return s.db.IsUserWithEmailExists(ctx, email)
-}
-
-func (s *ServiceImpl) IsValidUserCredentials(ctx context.Context, email string, passwordHash string) (bool, error) {
-	return s.db.IsUserWithEmailPasswordExists(ctx, email, passwordHash)
-}
-
-func (s *ServiceImpl) UpdateUser(ctx context.Context, user *User) error {
-	return s.db.UpdateUser(ctx, user.toDB())
+func (s *ServiceImpl) IsUserWithIdExists(ctx context.Context, id int) (bool, error) {
+	return s.db.IsUserWithIdExists(ctx, id)
 }
