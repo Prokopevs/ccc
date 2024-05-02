@@ -33,7 +33,6 @@ func (s *ServiceImpl) GetUserInfo(ctx context.Context, initData string) (*UserIn
 	exist, err := s.usersClient.IsUserWithIdExists(ctx, &schema.IsUserWithIdExistsRequest{
 		Id: int64(user.Id),
 	})
-	fmt.Println(exist)
 	if err != nil {
 		if status.Code(err) == codes.InvalidArgument {
 			return nil, CodeInvalidUserID, fmt.Errorf("invalid user id")
@@ -42,7 +41,7 @@ func (s *ServiceImpl) GetUserInfo(ctx context.Context, initData string) (*UserIn
 	}
 
 	if exist.Exists {
-		return &user, CodeOK, nil
+		return user, CodeOK, nil
 	}
 
 	_, err = s.usersClient.AddUser(ctx, &schema.AddUserRequest{
@@ -54,5 +53,5 @@ func (s *ServiceImpl) GetUserInfo(ctx context.Context, initData string) (*UserIn
 		return nil, CodeInternal, err
 	}
 
-	return &user, CodeOK, nil
+	return user, CodeOK, nil
 }

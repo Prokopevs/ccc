@@ -13,8 +13,8 @@ type errorResponse struct {
 	ErrorInfo string    `json:"errorInfo"`
 }
 
-func (e errorResponse) writeJSON(c *gin.Context) error {
-	return writeJSONResponse(c, e.Status, e)
+func (e errorResponse) writeJSON(c *gin.Context) {
+	writeJSONResponse(c, e.Status, e)
 }
 
 func getInternalServerErrorResponse(msg string, code core.Code) errorResponse {

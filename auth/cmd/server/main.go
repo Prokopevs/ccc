@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"net/url"
 	"os"
 	"os/signal"
 	"sync"
@@ -62,6 +61,11 @@ func run() error {
 	return nil
 }
 
+//  @title Game API
+//  @version 1.0
+//	@description This is Auth server.
+// @host localhost:3000
+// @BasePath /api/v1/auth
 func main() {
 	err := run()
 	if err != nil {

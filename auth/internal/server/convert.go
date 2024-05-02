@@ -13,8 +13,8 @@ type userInfoResponse struct {
 	Username  string `json:"username"`
 }
 
-func (u *userInfoResponse) writeJSON(c *gin.Context) error {
-	return writeJSONResponse(c, http.StatusOK, u)
+func (u *userInfoResponse) writeJSON(c *gin.Context) {
+	writeJSONResponse(c, http.StatusOK, u)
 }
 func convertCoreUserInfoToResponse(u *core.UserInfo) *userInfoResponse {
 	return &userInfoResponse{

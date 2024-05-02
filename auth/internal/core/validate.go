@@ -12,25 +12,31 @@ var (
 	errInitData = errors.New("invalid initData provided")
 )
 
-func ValidateToken(initData, token string) (UserInfo, error) {
+type UserTelegram struct {
+	Id        int    `json:"id"`
+	Firstname string `json:"first_name"`
+	Username  string `json:"username"`
+}
+
+func ValidateToken(initData, token string) (*UserInfo, error) {
 	initData, err := url.QueryUnescape(initData)
 	if err != nil {
-		return UserInfo{}, err
+		return &UserInfo{}, err
 	}
 
 	// check telegram string
 	err = initdata.Validate(initData, token, 0)
 	if err != nil {
-		return UserInfo{}, errInitData
+		return &UserInfo{}, errInitData
 	}
 
 	// get user data
 	q, _ := url.ParseQuery(initData)
-	var user UserInfo
+	var user UserTelegram
 	err = json.Unmarshal([]byte(q["user"][0]), &user)
 	if err != nil {
-		return UserInfo{}, err
+		return &UserInfo{}, err
 	}
 
-	return user, nil
+	return convertUserTelegramToUserInfo(&user), nil
 }

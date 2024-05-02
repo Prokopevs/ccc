@@ -1,0 +1,99 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is Auth server.",
+        "title": "Game API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:3000",
+    "basePath": "/api/v1/auth",
+    "paths": {
+        "/api/v1/auth/me": {
+            "get": {
+                "description": "Get user data",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get user data",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "InitData header",
+                        "name": "initData",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/core.UserInfo"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/server.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/server.errorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "core.Code": {
+            "type": "string",
+            "enum": [
+                "OK",
+                "INTERNAL_ERROR",
+                "INVALID_INITDATA",
+                "INVALID_USER_ID"
+            ],
+            "x-enum-varnames": [
+                "CodeOK",
+                "CodeInternal",
+                "CodeInvalidInitData",
+                "CodeInvalidUserID"
+            ]
+        },
+        "core.UserInfo": {
+            "type": "object",
+            "properties": {
+                "firstname": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "server.errorResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "$ref": "#/definitions/core.Code"
+                },
+                "errorInfo": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
