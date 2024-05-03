@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
+	_ "github.com/jackc/pgx/stdlib"
 )
 
 type db struct {
@@ -12,7 +12,7 @@ type db struct {
 }
 
 func Connect(ctx context.Context, addr string) (*db, error) {
-	d, err := sqlx.ConnectContext(ctx, "postgres", addr)
+	d, err := sqlx.ConnectContext(ctx, "pgx", addr)
 	if err != nil {
 		return nil, err
 	}

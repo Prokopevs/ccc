@@ -10,7 +10,7 @@ func convertPBAddUserToCore(user *schema.AddUserRequest) *core.UserReq {
 		Id:        int(user.Id),
 		Firstname: user.Firstname,
 		Username:  user.Username,
-		ReferralId: int(user.ReferralId),
+		InviterId: int(user.InviterId),
 	}
 }
 

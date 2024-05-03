@@ -9,7 +9,8 @@ type UserReq struct {
 	Id        int     
 	Firstname string     
 	Username  string     
-	ReferralId int
+	InviterId int
+	Createdat *time.Time
 }
 
 type UserRes struct {
@@ -20,16 +21,16 @@ type UserRes struct {
 }
 
 func (s *ServiceImpl) AddUser(ctx context.Context, user *UserReq) error {
-	exists, err := s.db.IsUserWithIdExists(ctx, user.ReferralId)
+	exists, err := s.db.IsUserWithIdExists(ctx, user.InviterId)
 	if err != nil {
 		return err
 	}
 
 	u := user.toDB()
 	if exists {
-		u.ReferralId = user.Id
+		u.InviterId = user.InviterId
 	} else {
-		u.ReferralId = 0
+		u.InviterId = 0
 	}
 	now := time.Now()
 	u.Createdat = &now

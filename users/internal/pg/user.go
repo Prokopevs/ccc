@@ -3,22 +3,23 @@ package pg
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"time"
 )
 
 type UserReq struct {
-	Id         int        `db:"id,omitempty"`
-	Firstname  string     `db:"firstname,omitempty"`
-	Username   string     `db:"username,omitempty"`
-	ReferralId int        `db:"referralId,omitempty"`
-	Createdat  *time.Time `db:"createdat,omitempty"`
+	Id        int
+	Firstname string
+	Username  string
+	InviterId int
+	Createdat *time.Time
 }
 
 type UserRes struct {
 	Id        int        `db:"id,omitempty"`
 	Firstname string     `db:"firstname,omitempty"`
 	Username  string     `db:"username,omitempty"`
-	Referrals []byte     `db:"referrals,omitempty"`
+	Referrals []int64     `db:"referrals,omitempty"`
 	Createdat *time.Time `db:"createdat,omitempty"`
 }
 
@@ -45,8 +46,9 @@ func (d *db) AddUser(ctx context.Context, u *UserReq) error {
 		return err
 	}
 
-	if u.ReferralId != 0 {
-		_, err = tx.ExecContext(ctx, addReferral, u.Id, u.ReferralId)
+	fmt.Println(u.Id, u.InviterId)
+	if u.InviterId != 0 {
+		_, err = tx.ExecContext(ctx, addReferral, u.Id, u.InviterId)
 		if err != nil {
 			tx.Rollback()
 			return err
@@ -62,6 +64,7 @@ func (d *db) GetUser(ctx context.Context, id int) (*UserRes, error) {
 	const q = "select * from users where id=$1"
 
 	u := &UserRes{}
+
 	err := d.db.GetContext(ctx, u, q, id)
 
 	return u, err

@@ -1,8 +1,6 @@
 package core
 
 import (
-	"encoding/binary"
-
 	"github.com/Prokopevs/ccc/users/internal/pg"
 )
 
@@ -15,17 +13,10 @@ func (n *UserReq) toDB() *pg.UserReq {
 }
 
 func convertDBUserToService(user *pg.UserRes) *UserRes {
-	intSlice := make([]int64, len(user.Referrals))
-
-	for i := 0; i < len(user.Referrals); i += 8 {
-		bits := binary.LittleEndian.Uint64(user.Referrals[i : i+8])
-		intSlice = append(intSlice, int64(bits))
-	}
-	
 	return &UserRes{
 		Id:        user.Id,
 		Firstname: user.Firstname,
 		Username:  user.Username,
-		Referrals: intSlice,
+		Referrals: user.Referrals,
 	}
 }
