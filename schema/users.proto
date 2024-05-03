@@ -17,6 +17,7 @@ message AddUserRequest {
   int64 id = 1;
   string firstname = 2;
   string username = 3;
+  int64 refferalId = 4;
 }
 
 message GetUserRequest {
