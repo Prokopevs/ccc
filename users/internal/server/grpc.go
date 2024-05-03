@@ -8,8 +8,8 @@ import (
 )
 
 type Service interface {
-	AddUser(ctx context.Context, user *core.User) error
-	GetUser(ctx context.Context, id int) (*core.User, bool, error)
+	AddUser(ctx context.Context, user *core.UserReq) error
+	GetUser(ctx context.Context, id int) (*core.UserRes, bool, error)
 	IsUserWithIdExists(ctx context.Context, id int) (bool, error)
 }
 

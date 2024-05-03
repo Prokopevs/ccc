@@ -2,28 +2,66 @@ package pg
 
 import (
 	"context"
+	"database/sql"
 	"time"
 )
 
-type User struct {
+type UserReq struct {
+	Id         int        `db:"id,omitempty"`
+	Firstname  string     `db:"firstname,omitempty"`
+	Username   string     `db:"username,omitempty"`
+	ReferralId int        `db:"referralId,omitempty"`
+	Createdat  *time.Time `db:"createdat,omitempty"`
+}
+
+type UserRes struct {
 	Id        int        `db:"id,omitempty"`
 	Firstname string     `db:"firstname,omitempty"`
 	Username  string     `db:"username,omitempty"`
+	Referrals []byte     `db:"referrals,omitempty"`
 	Createdat *time.Time `db:"createdat,omitempty"`
 }
 
-func (d *db) AddUser(ctx context.Context, u *User) error {
-	const q = "insert into users(id, firstname, username, createdat) values(:id, :firstname, :username, :createdat)"
+func (d *db) AddUser(ctx context.Context, u *UserReq) error {
+	const (
+		adduser     = "insert into users(id, firstname, username, createdat) values(:id, :firstname, :username, :createdat)"
+		addGameQ    = "insert into game(ownerId) values($1)"
+		addReferral = "UPDATE users SET referrals = array_append(referrals, $1) WHERE id = $2;"
+	)
+	tx, err := d.db.BeginTxx(ctx, &sql.TxOptions{})
+	if err != nil {
+		return err
+	}
 
-	_, err := d.db.NamedExecContext(ctx, q, u)
+	_, err = tx.NamedExecContext(ctx, adduser, u)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	_, err = tx.ExecContext(ctx, addGameQ, u.Id)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if u.ReferralId != 0 {
+		_, err = tx.ExecContext(ctx, addReferral, u.Id, u.ReferralId)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	err = tx.Commit()
 
 	return err
 }
 
-func (d *db) GetUser(ctx context.Context, id int) (*User, error) {
+func (d *db) GetUser(ctx context.Context, id int) (*UserRes, error) {
 	const q = "select * from users where id=$1"
 
-	u := &User{}
+	u := &UserRes{}
 	err := d.db.GetContext(ctx, u, q, id)
 
 	return u, err

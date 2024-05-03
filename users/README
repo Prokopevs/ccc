@@ -1,9 +1,9 @@
 commant to start: 
 1 make build
-2 PG_CONN=postgres://postgres:...@localhost:5432/gameDB?sslmode=disable GRPC_SERVER_ADDR=:8000 ./server
+2 PG_CONN=postgres://postgres:...@localhost:5432/gamedb?sslmode=disable GRPC_SERVER_ADDR=:8000 ./server
 
 docker posgress image required!
 
 build docker: docker build -t prod:local -f docker/Dockerfile ./
-run docker: docker run --rm --net api -p8000:8000 -e PG_CONN=postgres://postgres:...@gameDBCont:5432/gameDB?sslmode=disable -e GRPC_SERVER_ADDR=:8000 prod:local
+run docker: docker run --rm --net api -p8000:8000 -e PG_CONN=postgres://postgres:...@gamedbCont:5432/gamedb?sslmode=disable -e GRPC_SERVER_ADDR=:8000 prod:local
 

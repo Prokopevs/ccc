@@ -6,8 +6,8 @@ import (
 )
 
 type DB interface {
-	AddUser(context.Context, *pg.User) (error)
-	GetUser(context.Context, int) (*pg.User, error)
+	AddUser(context.Context, *pg.UserReq) (error)
+	GetUser(context.Context, int) (*pg.UserRes, error)
 	IsUserWithIdExists(context.Context, int) (bool, error)
 }
 

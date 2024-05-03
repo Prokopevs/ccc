@@ -10,7 +10,7 @@ require (
 )
 
 require (
-	github.com/Prokopevs/ccc/schema v0.0.0-20240429204756-85b39d5f081f // indirect
+	github.com/Prokopevs/ccc/schema v0.0.0-20240503135827-43d1ad4ad604 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
 	golang.org/x/net v0.21.0 // indirect
 	golang.org/x/sys v0.17.0 // indirect
