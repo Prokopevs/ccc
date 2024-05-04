@@ -3,31 +3,15 @@ package pg
 import (
 	"context"
 	"database/sql"
-	"fmt"
-	"time"
+
+	"github.com/Prokopevs/ccc/users/internal/model"
 )
 
-type UserReq struct {
-	Id        int
-	Firstname string
-	Username  string
-	InviterId int
-	Createdat *time.Time
-}
-
-type UserRes struct {
-	Id        int        `db:"id,omitempty"`
-	Firstname string     `db:"firstname,omitempty"`
-	Username  string     `db:"username,omitempty"`
-	Referrals []int64     `db:"referrals,omitempty"`
-	Createdat *time.Time `db:"createdat,omitempty"`
-}
-
-func (d *db) AddUser(ctx context.Context, u *UserReq) error {
+func (d *db) AddUser(ctx context.Context, u *model.UserReq) error {
 	const (
 		adduser     = "insert into users(id, firstname, username, createdat) values(:id, :firstname, :username, :createdat)"
 		addGameQ    = "insert into game(ownerId) values($1)"
-		addReferral = "UPDATE users SET referrals = array_append(referrals, $1) WHERE id = $2;"
+		addReferral = "insert into userReferral(inviterId, referralId) values($1, $2)"
 	)
 	tx, err := d.db.BeginTxx(ctx, &sql.TxOptions{})
 	if err != nil {
@@ -46,9 +30,8 @@ func (d *db) AddUser(ctx context.Context, u *UserReq) error {
 		return err
 	}
 
-	fmt.Println(u.Id, u.InviterId)
 	if u.InviterId != 0 {
-		_, err = tx.ExecContext(ctx, addReferral, u.Id, u.InviterId)
+		_, err = tx.ExecContext(ctx, addReferral, u.InviterId, u.Id)
 		if err != nil {
 			tx.Rollback()
 			return err
@@ -60,10 +43,10 @@ func (d *db) AddUser(ctx context.Context, u *UserReq) error {
 	return err
 }
 
-func (d *db) GetUser(ctx context.Context, id int) (*UserRes, error) {
+func (d *db) GetUser(ctx context.Context, id int) (*model.UserRes, error) {
 	const q = "select * from users where id=$1"
 
-	u := &UserRes{}
+	u := &model.UserRes{}
 
 	err := d.db.GetContext(ctx, u, q, id)
 
@@ -77,4 +60,13 @@ func (d *db) IsUserWithIdExists(ctx context.Context, id int) (bool, error) {
 	err := d.db.GetContext(ctx, &exists, q, id)
 
 	return exists, err
+}
+
+func (d *db) GetUserReferrals(ctx context.Context, id int) ([]*model.UserReferrals, error) {
+	const q = "SELECT u.firstname, u.username, ur.referralId FROM users u JOIN userReferral ur ON u.id = ur.referralId WHERE ur.inviterId = $1"
+
+	referrals := []*model.UserReferrals{}
+	err := d.db.SelectContext(ctx, &referrals, q, id)
+
+	return referrals, err
 }

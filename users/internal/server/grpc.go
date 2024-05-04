@@ -4,13 +4,14 @@ import (
 	"context"
 
 	"github.com/Prokopevs/ccc/schema"
-	"github.com/Prokopevs/ccc/users/internal/core"
+	"github.com/Prokopevs/ccc/users/internal/model"
 )
 
 type Service interface {
-	AddUser(ctx context.Context, user *core.UserReq) error
-	GetUser(ctx context.Context, id int) (*core.UserRes, bool, error)
+	AddUser(ctx context.Context, user *model.UserReq) error
+	GetUser(ctx context.Context, id int) (*model.UserRes, bool, error)
 	IsUserWithIdExists(ctx context.Context, id int) (bool, error)
+	GetUserReferrals(ctx context.Context, id int) ([]*model.UserReferrals, bool, error)
 }
 
 type GRPC struct {

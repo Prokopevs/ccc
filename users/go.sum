@@ -1,7 +1,7 @@
 filippo.io/edwards25519 v1.1.0 h1:FNf4tywRC1HmFuKW5xopWpigGjJKiJSV0Cqo0cJWDaA=
 filippo.io/edwards25519 v1.1.0/go.mod h1:BxyFTGdWcka3PhytdK4V28tE5sGfRvvvRV7EaN4VDT4=
-github.com/Prokopevs/ccc/schema v0.0.0-20240503165001-ac221c663f60 h1:BJp7RzrqnjsL97MaUuXJpi+tOKTAOvqZixp3pGcN28s=
-github.com/Prokopevs/ccc/schema v0.0.0-20240503165001-ac221c663f60/go.mod h1:X497dNG8k/LnawF5rdOZEuvIb1UwwB6ELuTVJEYzkz8=
+github.com/Prokopevs/ccc/schema v0.0.0-20240504170936-e89492d91440 h1:MfEYcYDlfbjlsemlr1ZZmBsiCqsQAU+NtyW8xVJ3ZNg=
+github.com/Prokopevs/ccc/schema v0.0.0-20240504170936-e89492d91440/go.mod h1:X497dNG8k/LnawF5rdOZEuvIb1UwwB6ELuTVJEYzkz8=
 github.com/cockroachdb/apd v1.1.0 h1:3LFP3629v+1aKXU5Q37mxmRxX/pIu1nijXydLShEq5I=
 github.com/cockroachdb/apd v1.1.0/go.mod h1:8Sl8LxpKi29FqWXR16WEFZRNSz3SoPzUzeMeY4+DwBQ=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=

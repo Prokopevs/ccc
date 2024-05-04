@@ -42,3 +42,18 @@ func (g *GRPC) IsUserWithIdExists(ctx context.Context, req *schema.IsUserWithIdE
 		Exists: exists,
 	}, nil
 }
+
+func (g *GRPC) GetUserReferrals(ctx context.Context, req *schema.GetUserReferralsRequest) (*schema.GetUserReferralsResponse, error) {
+	referrals, ok, err := g.service.GetUserReferrals(ctx, int(req.GetId()))
+	if err != nil {
+		if ok {
+			return nil, status.Error(codes.InvalidArgument, err.Error())
+		}
+
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &schema.GetUserReferralsResponse{
+		Referrals: convertCoreReferralsToPB(referrals),
+	}, nil
+}
