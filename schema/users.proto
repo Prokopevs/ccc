@@ -11,6 +11,8 @@ service Users {
   rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
   // IsUserWithIdExists - check if user with id exist
   rpc IsUserWithIdExists(IsUserWithIdExistsRequest) returns (IsUserWithIdExistsResponse) {}
+  // GetUserReferrals - get user referrals
+  rpc GetUserReferrals(GetUserReferralsRequest) returns (GetUserReferralsResponse) {}
 }
 
 message AddUserRequest {
@@ -28,6 +30,11 @@ message IsUserWithIdExistsRequest {
   int64 id = 1;
 }
 
+message GetUserReferralsRequest {
+  int64 id = 1;
+}
+
+
 message AddUserResponse {}
 
 message GetUserResponse {
@@ -38,9 +45,20 @@ message User {
   int64 id = 1;
   string firstname = 2;
   string username = 3;
-  repeated int64 referrals = 4;
 }
 
 message IsUserWithIdExistsResponse {
   bool exists = 1;
 }
+
+message GetUserReferralsResponse {
+  repeated Referrals referrals = 1;
+}
+
+message Referrals {
+  int64 referralId = 1;
+  string firstname = 2;
+  string username = 3;
+}
+
+

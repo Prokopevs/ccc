@@ -22,6 +22,7 @@ const (
 	Users_AddUser_FullMethodName            = "/ccc.schema.Users/AddUser"
 	Users_GetUser_FullMethodName            = "/ccc.schema.Users/GetUser"
 	Users_IsUserWithIdExists_FullMethodName = "/ccc.schema.Users/IsUserWithIdExists"
+	Users_GetUserReferrals_FullMethodName   = "/ccc.schema.Users/GetUserReferrals"
 )
 
 // UsersClient is the client API for Users service.
@@ -34,6 +35,8 @@ type UsersClient interface {
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
 	// IsUserWithIdExists - check if user with id exist
 	IsUserWithIdExists(ctx context.Context, in *IsUserWithIdExistsRequest, opts ...grpc.CallOption) (*IsUserWithIdExistsResponse, error)
+	// GetUserReferrals - get user referrals
+	GetUserReferrals(ctx context.Context, in *GetUserReferralsRequest, opts ...grpc.CallOption) (*GetUserReferralsResponse, error)
 }
 
 type usersClient struct {
@@ -71,6 +74,15 @@ func (c *usersClient) IsUserWithIdExists(ctx context.Context, in *IsUserWithIdEx
 	return out, nil
 }
 
+func (c *usersClient) GetUserReferrals(ctx context.Context, in *GetUserReferralsRequest, opts ...grpc.CallOption) (*GetUserReferralsResponse, error) {
+	out := new(GetUserReferralsResponse)
+	err := c.cc.Invoke(ctx, Users_GetUserReferrals_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UsersServer is the server API for Users service.
 // All implementations must embed UnimplementedUsersServer
 // for forward compatibility
@@ -81,6 +93,8 @@ type UsersServer interface {
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
 	// IsUserWithIdExists - check if user with id exist
 	IsUserWithIdExists(context.Context, *IsUserWithIdExistsRequest) (*IsUserWithIdExistsResponse, error)
+	// GetUserReferrals - get user referrals
+	GetUserReferrals(context.Context, *GetUserReferralsRequest) (*GetUserReferralsResponse, error)
 	mustEmbedUnimplementedUsersServer()
 }
 
@@ -96,6 +110,9 @@ func (UnimplementedUsersServer) GetUser(context.Context, *GetUserRequest) (*GetU
 }
 func (UnimplementedUsersServer) IsUserWithIdExists(context.Context, *IsUserWithIdExistsRequest) (*IsUserWithIdExistsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsUserWithIdExists not implemented")
+}
+func (UnimplementedUsersServer) GetUserReferrals(context.Context, *GetUserReferralsRequest) (*GetUserReferralsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserReferrals not implemented")
 }
 func (UnimplementedUsersServer) mustEmbedUnimplementedUsersServer() {}
 
@@ -164,6 +181,24 @@ func _Users_IsUserWithIdExists_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Users_GetUserReferrals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserReferralsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServer).GetUserReferrals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Users_GetUserReferrals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServer).GetUserReferrals(ctx, req.(*GetUserReferralsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Users_ServiceDesc is the grpc.ServiceDesc for Users service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -182,6 +217,10 @@ var Users_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "IsUserWithIdExists",
 			Handler:    _Users_IsUserWithIdExists_Handler,
+		},
+		{
+			MethodName: "GetUserReferrals",
+			Handler:    _Users_GetUserReferrals_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
