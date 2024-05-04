@@ -3,7 +3,7 @@ module github.com/Prokopevs/ccc/users
 go 1.22.1
 
 require (
-	github.com/Prokopevs/ccc/schema v0.0.0-20240503165001-ac221c663f60
+	github.com/Prokopevs/ccc/schema v0.0.0-20240504170936-e89492d91440
 	github.com/jackc/pgx v3.6.2+incompatible
 	github.com/jmoiron/sqlx v1.4.0
 	go.uber.org/zap v1.27.0
