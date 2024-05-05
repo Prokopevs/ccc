@@ -11,7 +11,8 @@ import (
 )
 
 type Service interface {
-	GetUserInfo(context.Context, string) (*core.UserInfo, core.Code, error)
+	GetUserInfo(context.Context, string, int) (*core.UserInfo, core.Code, error)
+	GetUserReferrals( context.Context, int) ([]*core.UserReferrals, core.Code, error)
 }
 
 type HTTP struct {

@@ -32,3 +32,11 @@ func getUnauthorizedErrorWithMsgResponse(msg string, code core.Code) errorRespon
 		ErrorInfo: msg,
 	}
 }
+
+func getBadRequestWithMsgResponse(msg string, code core.Code) errorResponse {
+	return errorResponse{
+		Status:    http.StatusBadRequest,
+		Code:      code,
+		ErrorInfo: msg,
+	}
+}

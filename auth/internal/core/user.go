@@ -19,9 +19,16 @@ type UserInfo struct {
 	Id        int
 	Firstname string
 	Username  string
+	InviterId int
 }
 
-func (s *ServiceImpl) GetUserInfo(ctx context.Context, initData string) (*UserInfo, Code, error) {
+type UserReferrals struct {
+	ReferralId int
+	Firstname  string
+	Username   string
+}
+
+func (s *ServiceImpl) GetUserInfo(ctx context.Context, initData string, inviterId int) (*UserInfo, Code, error) {
 	user, err := ValidateToken(initData, s.token)
 	if err != nil {
 		if errors.Is(err, errInitData) {
@@ -45,13 +52,28 @@ func (s *ServiceImpl) GetUserInfo(ctx context.Context, initData string) (*UserIn
 	}
 
 	_, err = s.usersClient.AddUser(ctx, &schema.AddUserRequest{
-		Id: int64(user.Id),
+		Id:        int64(user.Id),
 		Firstname: user.Firstname,
-		Username: user.Username,
+		Username:  user.Username,
+		InviterId: int64(inviterId),
 	})
 	if err != nil {
 		return nil, CodeInternal, err
 	}
 
 	return user, CodeOK, nil
+}
+
+func (s *ServiceImpl) GetUserReferrals(ctx context.Context, id int) ([]*UserReferrals, Code, error) {
+	referrals, err := s.usersClient.GetUserReferrals(ctx, &schema.GetUserReferralsRequest{
+		Id: int64(id),
+	})
+	if err != nil {
+		if status.Code(err) == codes.InvalidArgument {
+			return nil, CodeInvalidUserID, fmt.Errorf("invalid user id")
+		}
+		return nil, CodeInternal, err
+	}
+
+	return convertPBUserReferralsToUserReferrals(referrals.Referrals), CodeOK, nil
 }
