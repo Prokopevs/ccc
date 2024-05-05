@@ -7,7 +7,6 @@ import (
 
 type envConfig struct {
 	pgConnString  string
-	usersGRPCAddr string
 	httpAddr      string
 }
 

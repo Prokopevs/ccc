@@ -32,7 +32,7 @@ func (h *HTTP) getGameResponse(r *gin.Context) response {
 	}
 	idInt, err := strconv.Atoi(id)
 	if err != nil {
-		getInternalServerErrorResponse("internal error", core.CodeInternal)
+		return getInternalServerErrorResponse("internal error", core.CodeInternal)
 	}
 
 	gameInfo, err := h.service.GetGame(r.Request.Context(), idInt)
