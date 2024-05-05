@@ -10,7 +10,7 @@ import (
 func (h *HTTP) setRoutes(r *gin.Engine) {
 	api := r.Group("/api/v1/auth") 
 	{
-		api.GET("/me/:inviterId", h.me)
+		api.GET("/me", h.me)
 		api.GET("/referrals/:id", h.referrals)
 		api.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}

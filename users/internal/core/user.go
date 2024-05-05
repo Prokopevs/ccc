@@ -8,13 +8,15 @@ import (
 )
 
 func (s *ServiceImpl) AddUser(ctx context.Context, user *model.UserReq) error {
-	exists, err := s.db.IsUserWithIdExists(ctx, user.InviterId)
-	if err != nil {
-		return err
-	}
+	if user.InviterId != 0 {
+		exists, err := s.db.IsUserWithIdExists(ctx, user.InviterId)
+		if err != nil {
+			return err
+		}
 
-	if !exists {
-		user.InviterId = 0
+		if !exists {
+			user.InviterId = 0
+		}
 	}
 	now := time.Now()
 	user.Createdat = &now

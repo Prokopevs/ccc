@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/Prokopevs/ccc/auth/internal/core"
@@ -38,16 +39,17 @@ func (h *HTTP) getMeResponse(r *gin.Context) response {
 		return getUnauthorizedErrorWithMsgResponse("no initData", codeNoHeader)
 	}
 
+	id, ok := r.GetQuery("inviterId") 
 	idInt := 0
-	id := r.Param("inviterId")
 	var err error 
-	if id != "" {
+	if ok {
 		idInt, err = strconv.Atoi(id) 
 		if err != nil { 
+			fmt.Println("here")
 			return getInternalServerErrorResponse("internal error", core.CodeInternal)
 		}
 	}
-	
+
 	userInfo, code, err := h.service.GetUserInfo(r.Request.Context(), initData, idInt)
 	if err != nil {
 		if code == core.CodeInternal {
@@ -82,7 +84,7 @@ func (h *HTTP) getReferralResponse(r *gin.Context) response {
 	referrals, code, err := h.service.GetUserReferrals(r.Request.Context(), idInt)
 	if err != nil {
 		if code == core.CodeInvalidUserID {
-			return getBadRequestWithMsgResponse("no param", codeNoParam)
+			return getBadRequestWithMsgResponse("invalid user id", code)
 		}
 		h.log.Errorw("Get user info.", "err", err)
 		return getInternalServerErrorResponse("internal error", code)
