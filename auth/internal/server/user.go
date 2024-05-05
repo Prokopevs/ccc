@@ -86,7 +86,7 @@ func (h *HTTP) getReferralResponse(r *gin.Context) response {
 		if code == core.CodeInvalidUserID {
 			return getBadRequestWithMsgResponse("invalid user id", code)
 		}
-		h.log.Errorw("Get user info.", "err", err)
+		h.log.Errorw("Get referral response.", "err", err)
 		return getInternalServerErrorResponse("internal error", code)
 	}
 

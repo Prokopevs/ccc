@@ -2,6 +2,7 @@ package core
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/Prokopevs/ccc/game/internal/model"
 )
@@ -9,9 +10,10 @@ import (
 func (s *ServiceImpl) GetGame(ctx context.Context, id int) (*model.Game, error) {
 	game, err := s.db.GetGame(ctx, id)
 	if err != nil {
+		fmt.Println(err, "here2")
 		return &model.Game{}, err
 	}
-
+	
 	return game, err
 }
 

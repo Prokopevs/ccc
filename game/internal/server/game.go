@@ -91,7 +91,7 @@ func (h *HTTP) updateMultiplicatorResponse(r *gin.Context) response {
 			return getBadRequestWithMsgResponse(err.Error(), code)
 		}
 		
-		h.log.Errorw("Update score info", "err", err)
+		h.log.Errorw("Update multiplicator info", "err", err)
 		return getInternalServerErrorResponse("internal error", core.CodeInternal)
 	}
 

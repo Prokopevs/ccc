@@ -3,6 +3,7 @@ package pg
 import (
 	"context"
 	"database/sql"
+	"fmt"
 
 	"github.com/Prokopevs/ccc/game/internal/model"
 )
@@ -10,10 +11,10 @@ import (
 func (d *db) GetGame(ctx context.Context, id int) (*model.Game, error) {
 	const q = "select * from game where ownerId=$1"
 
-	game := model.Game{}
-	err := d.db.SelectContext(ctx, &game, q, id)
-
-	return &game, err
+	game := &model.Game{}
+	err := d.db.GetContext(ctx, game, q, id)
+	fmt.Println(err, "here")
+	return game, err
 }
 
 func (d *db) UpdateScore(ctx context.Context, score *model.Score) error {
