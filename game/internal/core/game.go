@@ -1,21 +1,39 @@
 package core
 
-import "context"
+import (
+	"context"
 
-func (s *ServiceImpl) UpdateScore(ctx context.Context, id int, score int) (error) {
-	err := s.db.UpdateScore(ctx, id, score)
+	"github.com/Prokopevs/ccc/game/internal/model"
+)
+
+func (s *ServiceImpl) GetGame(ctx context.Context, id int) (*model.Game, error) {
+	game, err := s.db.GetGame(ctx, id)
 	if err != nil {
-		return err
+		return &model.Game{}, err
 	}
 
-	return err
+	return game, err
 }
 
-func (s *ServiceImpl) UpdateMultiplicator(ctx context.Context, id int, mType string) (error) {
-	tasks, err := s.db.GetUserTasks(ctx, uid)
+func (s *ServiceImpl) UpdateScore(ctx context.Context, score *model.Score) (Code, error) {
+	err := s.db.UpdateScore(ctx, score)
 	if err != nil {
-		return nil, err
+		return CodeDBFail, err
 	}
 
-	return err
+	return CodeOK, err 
+}
+
+func (s *ServiceImpl) UpdateMultiplicator(ctx context.Context, MultipUpdate *model.MultipUpdate) (Code, error) {
+	exist := s.CheckCorectMultiplicatorType(MultipUpdate.NameType) 
+	if !exist {
+		return CodeNoMultiplicator, ErrNoSuchMultiplicator
+	}
+
+	err := s.db.UpdateMultiplicator(ctx, MultipUpdate)
+	if err != nil {
+		return CodeDBFail, err
+	}
+
+	return CodeOK, err
 }

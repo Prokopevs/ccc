@@ -1,12 +1,15 @@
-package core 
+package core
 
 import (
 	"context"
+
+	"github.com/Prokopevs/ccc/game/internal/model"
 )
 
 type DB interface {
-	UpdateScore(context.Context, int, int) (error)
-	UpdateMultiplicator(context.Context, int, string) (error)
+	GetGame(context.Context, int) (*model.Game, error)
+	UpdateScore(context.Context, *model.Score) (error)
+	UpdateMultiplicator(context.Context, *model.MultipUpdate) (error)
 }
 
 type ServiceImpl struct {

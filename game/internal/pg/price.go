@@ -1,6 +1,6 @@
 package pg
 
-func (d *db) GetPrices() map[int]int {
+func (d *db) getPrices() map[int]int {
 	newMap := make(map[int]int)
 	for key, value := range prices {
 		newMap[key] = value

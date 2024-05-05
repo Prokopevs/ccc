@@ -3,25 +3,28 @@ package pg
 import (
 	"context"
 	"database/sql"
+
+	"github.com/Prokopevs/ccc/game/internal/model"
 )
 
-type Game struct {
-	OwnerId    int    `db:"ownerId"`
-	Score      string `db:"score"`
-	GasStorage int    `db:"gasStorage"`
-	GasMining  string `db:"gasMining"`
-	Protection int    `db:"protection"`
+func (d *db) GetGame(ctx context.Context, id int) (*model.Game, error) {
+	const q = "select * from game where ownerId=$1"
+
+	game := model.Game{}
+	err := d.db.SelectContext(ctx, &game, q, id)
+
+	return &game, err
 }
 
-func (d *db) UpdateScore(ctx context.Context, id int, score int) error {
+func (d *db) UpdateScore(ctx context.Context, score *model.Score) error {
 	const UpdateScoreQ = "UPDATE game SET score = score + $1 WHERE ownerId = $2;"
 
-	_, err := d.db.ExecContext(ctx, UpdateScoreQ, id, score)
+	_, err := d.db.ExecContext(ctx, UpdateScoreQ, score.Id, score.Score)
 
 	return err
 }
 
-func (d *db) UpdateMultiplicator(ctx context.Context, id int, mType string) error {
+func (d *db) UpdateMultiplicator(ctx context.Context, MultipUpdate *model.MultipUpdate) error {
 	const (
 		MultiplicatorQ = "select $1 from game where ownerId=$2"
 		getScoreQ      = "select score from game where ownerId=$1"
@@ -29,21 +32,21 @@ func (d *db) UpdateMultiplicator(ctx context.Context, id int, mType string) erro
 		updateMultiplicatorQ  = "UPDATE game SET $1 = $1 + 1 WHERE ownerId = $2;"
 	)
 
-	prices := d.GetPrices()
+	prices := d.getPrices()
 	tx, err := d.db.BeginTxx(ctx, &sql.TxOptions{})
 	if err != nil {
 		return err
 	}
 
 	var m int
-	err = tx.GetContext(ctx, m, MultiplicatorQ, mType, id) // get multiplicator level
+	err = tx.GetContext(ctx, m, MultiplicatorQ, MultipUpdate.NameType, MultipUpdate.Id) // get multiplicator level
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
 
 	var s int
-	err = tx.GetContext(ctx, s, getScoreQ, id) // get score
+	err = tx.GetContext(ctx, s, getScoreQ, MultipUpdate.Id) // get score
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -55,13 +58,13 @@ func (d *db) UpdateMultiplicator(ctx context.Context, id int, mType string) erro
 		return err
 	}
 
-	_, err = tx.ExecContext(ctx, updateScoreQ, prices[m+1], id)
+	_, err = tx.ExecContext(ctx, updateScoreQ, prices[m+1], MultipUpdate.Id)
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
 
-	_, err = tx.ExecContext(ctx, updateMultiplicatorQ, mType, id)
+	_, err = tx.ExecContext(ctx, updateMultiplicatorQ, MultipUpdate.NameType, MultipUpdate.Id)
 	if err != nil {
 		tx.Rollback()
 		return err
