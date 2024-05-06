@@ -19,15 +19,14 @@ func (d *db) GetGame(ctx context.Context, id int) (*model.Game, error) {
 
 func (d *db) UpdateScore(ctx context.Context, score *model.Score) error {
 	const UpdateScoreQ = "UPDATE game SET score = score + $1 WHERE ownerId = $2;"
-
-	_, err := d.db.ExecContext(ctx, UpdateScoreQ, score.Id, score.Score)
+	_, err := d.db.ExecContext(ctx, UpdateScoreQ, score.Score, score.Id)
 
 	return err
 }
 
 func (d *db) UpdateMultiplicator(ctx context.Context, MultipUpdate *model.MultipUpdate) error {
+	MultiplicatorQ := fmt.Sprintf("SELECT %s FROM game WHERE ownerId=$1", MultipUpdate.NameType)
 	const (
-		MultiplicatorQ = "select $1 from game where ownerId=$2"
 		getScoreQ      = "select score from game where ownerId=$1"
 		updateScoreQ  = "UPDATE game SET score = score - $1 WHERE ownerId = $2;"
 		updateMultiplicatorQ  = "UPDATE game SET $1 = $1 + 1 WHERE ownerId = $2;"
@@ -40,34 +39,40 @@ func (d *db) UpdateMultiplicator(ctx context.Context, MultipUpdate *model.Multip
 	}
 
 	var m int
-	err = tx.GetContext(ctx, m, MultiplicatorQ, MultipUpdate.NameType, MultipUpdate.Id) // get multiplicator level
+	fmt.Println(MultipUpdate.NameType, MultipUpdate.Id)
+	err = tx.QueryRowContext(ctx, MultiplicatorQ, MultipUpdate.Id).Scan(&m)
 	if err != nil {
 		tx.Rollback()
+		fmt.Println("here2")
 		return err
 	}
 
 	var s int
-	err = tx.GetContext(ctx, s, getScoreQ, MultipUpdate.Id) // get score
+	err = tx.QueryRowContext(ctx, getScoreQ, MultipUpdate.Id).Scan(&s)
 	if err != nil {
 		tx.Rollback()
+		fmt.Println("here3")
 		return err
 	}
 
-	if s < prices[m+1] {
+	if s < prices[m] {
 		err = ErrNoEnoughScore
 		tx.Rollback()
+		fmt.Println("here4")
 		return err
 	}
 
-	_, err = tx.ExecContext(ctx, updateScoreQ, prices[m+1], MultipUpdate.Id)
+	_, err = tx.ExecContext(ctx, updateScoreQ, prices[m], MultipUpdate.Id)
 	if err != nil {
 		tx.Rollback()
+		fmt.Println("here5")
 		return err
 	}
 
 	_, err = tx.ExecContext(ctx, updateMultiplicatorQ, MultipUpdate.NameType, MultipUpdate.Id)
 	if err != nil {
 		tx.Rollback()
+		fmt.Println("here6")
 		return err
 	}
 
