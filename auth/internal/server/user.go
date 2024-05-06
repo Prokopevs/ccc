@@ -10,7 +10,7 @@ import (
 
 const (
 	codeNoHeader = "NO_HEADER"
-	codeNoParam = "NO_PARAM"
+	codeNoParam  = "NO_PARAM"
 )
 
 type response interface {
@@ -23,10 +23,11 @@ type response interface {
 // @Accept 	 	 json
 // @Produce 	 json
 // @Param		 initData	header	string	true	"InitData header"
-// @Success 	 200  {object} core.UserInfo
+// @Param        q    query     string  false  "name search by q"  Format(email)
+// @Success 	 200  {object}  userInfoResponse
 // @Failure      401  {object}  errorResponse
 // @Failure      500  {object}  errorResponse
-// @Router       /api/v1/auth/me [get]``
+// @Router       /api/v1/auth/me [get]“
 func (h *HTTP) me(c *gin.Context) {
 	resp := h.getMeResponse(c)
 
@@ -39,12 +40,12 @@ func (h *HTTP) getMeResponse(r *gin.Context) response {
 		return getUnauthorizedErrorWithMsgResponse("no initData", codeNoHeader)
 	}
 
-	id, ok := r.GetQuery("inviterId") 
+	id, ok := r.GetQuery("inviterId")
 	idInt := 0
-	var err error 
+	var err error
 	if ok {
-		idInt, err = strconv.Atoi(id) 
-		if err != nil { 
+		idInt, err = strconv.Atoi(id)
+		if err != nil {
 			fmt.Println("here")
 			return getInternalServerErrorResponse("internal error", core.CodeInternal)
 		}
@@ -62,9 +63,18 @@ func (h *HTTP) getMeResponse(r *gin.Context) response {
 
 	return convertCoreUserInfoToResponse(userInfo)
 }
-// @Param		 message	body    core.UserInfo	true	"Account Info"
+// Param		 message	body    core.UserInfo	true	"Account Info"
 
-
+// @Summary  	 Get user referrals
+// @Tags 		 Auth
+// @Description  Get user referrals
+// @Accept 	 	 json
+// @Produce 	 json
+// @Param 		 id path int true "Inviter Id"
+// @Success 	 200  {object}  core.UserInfo
+// @Failure      401  {object}  errorResponse
+// @Failure      500  {object}  errorResponse
+// @Router       /api/v1/auth/referrals/{id} [get]“
 func (h *HTTP) referrals(c *gin.Context) {
 	resp := h.getReferralResponse(c)
 
@@ -76,9 +86,9 @@ func (h *HTTP) getReferralResponse(r *gin.Context) response {
 		return getBadRequestWithMsgResponse("no param", codeNoParam)
 	}
 
-	idInt, err := strconv.Atoi(id) 
-	if err != nil { 
-		return getInternalServerErrorResponse("internal error", core.CodeInternal) 
+	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		return getInternalServerErrorResponse("internal error", core.CodeInternal)
 	}
 
 	referrals, code, err := h.service.GetUserReferrals(r.Request.Context(), idInt)
