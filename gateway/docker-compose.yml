@@ -1,9 +1,11 @@
 version: "3"
 
 services:
-  postgres:
-    container_name: postgres
+  gamedbCont:
+    container_name: gamedbCont
     image: postgres
+    ports: 
+      - "5432:5432"
     environment:
       POSTGRES_USER: ${PG_USER}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
@@ -28,21 +30,21 @@ services:
     networks:
       - api
     depends_on:
-      - postgres
+      - gamedbCont
     environment:
       GRPC_SERVER_ADDR: :8000
-      PG_CONN: postgres://${PG_USER}:${PG_PASSWORD}@postgres:5432/gamedb?sslmode=disable
+      PG_CONN: postgres://${PG_USER}:${PG_PASSWORD}@gamedbCont:5432/gamedb?sslmode=disable
   game-api:
     image: game/game-api:latest
     restart: unless-stopped
     networks:
       - api
     depends_on:
-      - postgres
+      - gamedbCont
       - users-api
     environment:
       HTTP_ADDR: :3000
-      PG_CONN: postgres://${PG_USER}:${PG_PASSWORD}@postgres:5432/gamedb?sslmode=disable
+      PG_CONN: postgres://${PG_USER}:${PG_PASSWORD}@gamedbCont:5432/gamedb?sslmode=disable
       USERS_GRPC_ADDR: users-api:8000
   krakend_ce:
     image: devopsfaith/krakend:2.6

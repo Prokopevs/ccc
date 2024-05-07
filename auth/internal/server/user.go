@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/Prokopevs/ccc/auth/internal/core"
@@ -46,7 +45,6 @@ func (h *HTTP) getMeResponse(r *gin.Context) response {
 	if ok {
 		idInt, err = strconv.Atoi(id)
 		if err != nil {
-			fmt.Println("here")
 			return getInternalServerErrorResponse("internal error", core.CodeInternal)
 		}
 	}

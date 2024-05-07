@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"name": "api-proxy",
 	"port": 8080,
 	"timeout": "30s",
@@ -33,7 +33,8 @@
 				"Content-Length",
 				"Content-Type",
 				"Cache-Control",
-				"Authorization"
+				"Authorization",
+				"initData"
 			],
 			"max_age": "12h"
 		},
@@ -53,11 +54,11 @@
 			"endpoint": "/api/v1/auth/me",
 			"method": "GET",
 			"output_encoding": "no-op",
-			"querystring_params": [
-				"*"
+			"input_query_strings": [
+				"inviterId"
 			],
-			"headers_to_pass": [
-				"*"
+			"input_headers": [
+				"initData"
 			],
 			"backend": [{
 				"url_pattern": "/api/v1/auth/me",
@@ -72,10 +73,10 @@
 			"endpoint": "/api/v1/auth/referrals/{id}",
 			"method": "GET",
 			"output_encoding": "no-op",
-			"querystring_params": [
+			"input_query_strings": [
 				"*"
 			],
-			"headers_to_pass": [
+			"input_headers": [
 				"*"
 			],
 			"backend": [{
@@ -91,10 +92,10 @@
 			"endpoint": "/api/v1/game/getGame/{id}",
 			"method": "GET",
 			"output_encoding": "no-op",
-			"querystring_params": [
+			"input_query_strings": [
 				"*"
 			],
-			"headers_to_pass": [
+			"input_headers": [
 				"*"
 			],
 			"backend": [{
@@ -110,10 +111,10 @@
 			"endpoint": "/api/v1/game/updateScore",
 			"method": "POST",
 			"output_encoding": "no-op",
-			"querystring_params": [
+			"input_query_strings": [
 				"*"
 			],
-			"headers_to_pass": [
+			"input_headers": [
 				"*"
 			],
 			"backend": [{
@@ -129,10 +130,10 @@
 			"endpoint": "/api/v1/game/updateMultiplicator",
 			"method": "POST",
 			"output_encoding": "no-op",
-			"querystring_params": [
+			"input_query_strings": [
 				"*"
 			],
-			"headers_to_pass": [
+			"input_headers": [
 				"*"
 			],
 			"backend": [{

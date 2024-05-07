@@ -13,7 +13,6 @@ func (d *db) GetGame(ctx context.Context, id int) (*model.Game, error) {
 
 	game := &model.Game{}
 	err := d.db.GetContext(ctx, game, q, id)
-	fmt.Println(err, "here")
 	return game, err
 }
 

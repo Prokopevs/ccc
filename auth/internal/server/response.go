@@ -3,21 +3,25 @@ package server
 import (
 	"net/http"
 
+	"github.com/Prokopevs/ccc/auth/internal/core"
 	"github.com/gin-gonic/gin"
 )
 
 type okResponse struct {
-	jsonData interface{}
+	Data interface{}
 }
 
-func newOKResponse(data interface{}) response {
+func newOKResponse(data []*core.UserReferrals) response {
+	if len(data) == 0 {
+        data = []*core.UserReferrals{}
+    }
 	return &okResponse{
-		jsonData: data,
+		Data: data,
 	}
 }
 
 func (o *okResponse) writeJSON(c *gin.Context) {
-	writeJSONResponse(c, http.StatusOK, o.jsonData)
+	writeJSONResponse(c, http.StatusOK, o)
 }
 
 func writeJSONResponse(c *gin.Context, status int, v interface{})  {
