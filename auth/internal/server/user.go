@@ -22,8 +22,8 @@ type response interface {
 // @Description  Get user data
 // @Accept 	 	 json
 // @Produce 	 json
-// @Param		 initData	header	string	true	"InitData header"
-// @Param        q    query     string  false  "name search by q"  Format(email)
+// @Param		 initData	header	string	true   "InitData header"
+// @Param        inviterId  query   int     false  "get param inviterId"
 // @Success 	 200  {object}  userInfoResponse
 // @Failure      401  {object}  errorResponse
 // @Failure      500  {object}  errorResponse
@@ -63,7 +63,7 @@ func (h *HTTP) getMeResponse(r *gin.Context) response {
 
 	return convertCoreUserInfoToResponse(userInfo)
 }
-// Param		 message	body    core.UserInfo	true	"Account Info"
+
 
 // @Summary  	 Get user referrals
 // @Tags 		 Auth
@@ -71,7 +71,8 @@ func (h *HTTP) getMeResponse(r *gin.Context) response {
 // @Accept 	 	 json
 // @Produce 	 json
 // @Param 		 id path int true "Inviter Id"
-// @Success 	 200  {object}  core.UserInfo
+// @Success 	 200  {array}   core.UserReferrals
+// @Failure      400  {object}  errorResponse
 // @Failure      401  {object}  errorResponse
 // @Failure      500  {object}  errorResponse
 // @Router       /api/v1/auth/referrals/{id} [get]“

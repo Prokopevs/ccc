@@ -41,9 +41,6 @@ func (s *ServiceImpl) GetUserInfo(ctx context.Context, initData string, inviterI
 		Id: int64(user.Id),
 	})
 	if err != nil {
-		if status.Code(err) == codes.InvalidArgument {
-			return nil, CodeInvalidUserID, fmt.Errorf("invalid user id")
-		}
 		return nil, CodeInternal, err
 	}
 

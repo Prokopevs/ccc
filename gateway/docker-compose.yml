@@ -1,0 +1,64 @@
+version: "3"
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      PGDATA: /data/postgres
+      restart: unless-stopped
+    volumes:
+       - ./postgres:/data/postgres
+    networks:
+      - api
+  auth-api:
+    image: game/auth-api:latest
+    restart: unless-stopped
+    networks:
+      - api
+    environment:
+      USERS_GRPC_ADDR: users-api:8000
+      HTTP_SERVER_ADDR: :3000
+      TELEGRAM_TOKEN: ${TELEGRAM_TOKEN}
+  users-api:
+    image: game/users-api:latest
+    restart: unless-stopped
+    networks:
+      - api
+    depends_on:
+      - postgres
+    environment:
+      GRPC_SERVER_ADDR: :8000
+      PG_CONN: postgres://${PG_USER}:${PG_PASSWORD}@postgres:5432/gamedb?sslmode=disable
+  game-api:
+    image: game/game-api:latest
+    restart: unless-stopped
+    networks:
+      - api
+    depends_on:
+      - postgres
+      - users-api
+    environment:
+      HTTP_ADDR: :3000
+      PG_CONN: postgres://${PG_USER}:${PG_PASSWORD}@postgres:5432/gamedb?sslmode=disable
+      USERS_GRPC_ADDR: users-api:8000
+  krakend_ce:
+    image: devopsfaith/krakend:2.6
+    volumes:
+      - ./krakend:/etc/krakend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    command: ["run", "-d", "-c", "/etc/krakend/krakend.json"]
+    depends_on:
+      - auth-api
+      - users-api
+      - game-api
+    networks:
+      - api
+
+networks:
+  api:
+    driver: bridge

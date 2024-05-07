@@ -2,21 +2,21 @@ basePath: /api/v1/auth
 definitions:
   core.Code:
     enum:
-    - OK
-    - INTERNAL_ERROR
     - INVALID_INITDATA
     - INVALID_USER_ID
+    - OK
+    - INTERNAL_ERROR
     type: string
     x-enum-varnames:
-    - CodeOK
-    - CodeInternal
     - CodeInvalidInitData
     - CodeInvalidUserID
-  core.UserInfo:
+    - CodeOK
+    - CodeInternal
+  core.UserReferrals:
     properties:
       firstname:
         type: string
-      id:
+      referralId:
         type: integer
       username:
         type: string
@@ -26,6 +26,15 @@ definitions:
       code:
         $ref: '#/definitions/core.Code'
       errorInfo:
+        type: string
+    type: object
+  server.userInfoResponse:
+    properties:
+      firstname:
+        type: string
+      id:
+        type: integer
+      username:
         type: string
     type: object
 host: localhost:3000
@@ -46,13 +55,17 @@ paths:
         name: initData
         required: true
         type: string
+      - description: get param inviterId
+        in: query
+        name: inviterId
+        type: integer
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/core.UserInfo'
+            $ref: '#/definitions/server.userInfoResponse'
         "401":
           description: Unauthorized
           schema:
@@ -62,6 +75,37 @@ paths:
           schema:
             $ref: '#/definitions/server.errorResponse'
       summary: Get user data
+      tags:
+      - Auth
+  /api/v1/auth/referrals/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get user referrals
+      parameters:
+      - description: Inviter Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/core.UserReferrals'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/server.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.errorResponse'
+      summary: Get user referrals
       tags:
       - Auth
 swagger: "2.0"

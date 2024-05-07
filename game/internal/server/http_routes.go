@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/gin-swagger"
 	"github.com/swaggo/files"
-	// _ "github.com/Prokopevs/ccc/game/docs"
+	_ "github.com/Prokopevs/ccc/game/docs"
 )
 
 func (h *HTTP) setRoutes(r *gin.Engine) {

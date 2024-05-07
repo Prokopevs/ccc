@@ -8,6 +8,7 @@ import (
 type envConfig struct {
 	pgConnString  string
 	httpAddr      string
+	usersGRPCAddr string
 }
 
 func loadEnvConfig() (*envConfig, error) {
@@ -16,6 +17,7 @@ func loadEnvConfig() (*envConfig, error) {
 
 		pgConnStringEnv  = "PG_CONN"
 		httpAddrEnv      = "HTTP_ADDR"
+		usersGRPCAddr    = "USERS_GRPC_ADDR"
 	)
 
 	var ok bool
@@ -28,6 +30,11 @@ func loadEnvConfig() (*envConfig, error) {
 	}
 
 	cfg.httpAddr, ok = os.LookupEnv(httpAddrEnv)
+	if !ok {
+		return nil, fmt.Errorf(provideEnvErrorMsg, httpAddrEnv)
+	}
+
+	cfg.usersGRPCAddr, ok = os.LookupEnv(usersGRPCAddr)
 	if !ok {
 		return nil, fmt.Errorf(provideEnvErrorMsg, httpAddrEnv)
 	}

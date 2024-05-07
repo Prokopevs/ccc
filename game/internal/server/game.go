@@ -2,11 +2,11 @@ package server
 
 import (
 	"errors"
-	"reflect"
 	"strconv"
 
 	"github.com/Prokopevs/ccc/game/internal/core"
 	"github.com/Prokopevs/ccc/game/internal/model"
+	"github.com/Prokopevs/ccc/game/internal/pg"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,6 +19,16 @@ type response interface {
 	writeJSON(*gin.Context)
 }
 
+// @Summary  	 Get game data
+// @Tags 		 Game
+// @Description  Get game data
+// @Accept 	 	 json
+// @Produce 	 json
+// @Param 		 id path int true "user Id"
+// @Success 	 200  {object}  model.Game
+// @Failure      400  {object}  errorResponse
+// @Failure      500  {object}  errorResponse
+// @Router       /api/v1/game/getGame/{id} [get]“
 func (h *HTTP) getGame(c *gin.Context) {
 	resp := h.getGameResponse(c)
 
@@ -37,6 +47,10 @@ func (h *HTTP) getGameResponse(r *gin.Context) response {
 
 	gameInfo, err := h.service.GetGame(r.Request.Context(), idInt)
 	if err != nil {
+		if errors.Is(err, core.ErrNoSuchUser) {
+			return getBadRequestWithMsgResponse(err.Error(), core.CodeBadRequest)
+		}
+
 		h.log.Errorw("Get game info", "err", err)
 		return getInternalServerErrorResponse("internal error", core.CodeInternal)
 	}
@@ -44,6 +58,16 @@ func (h *HTTP) getGameResponse(r *gin.Context) response {
 	return convertCoreGameToResponse(gameInfo)
 }
 
+// @Summary  	 Update score
+// @Tags 		 Game
+// @Description  Update score
+// @Accept 	 	 json
+// @Produce 	 json
+// @Param		 message	body    model.Score	true	"Body"
+// @Success 	 200  {object}  OKStruct
+// @Failure      400  {object}  errorResponse
+// @Failure      500  {object}  errorResponse
+// @Router       /api/v1/game/updateScore [post]“
 func (h *HTTP) updateScore(c *gin.Context) {
 	resp := h.updateScoreResponse(c)
 
@@ -53,15 +77,15 @@ func (h *HTTP) updateScore(c *gin.Context) {
 func (h *HTTP) updateScoreResponse(r *gin.Context) response {
 	var s model.Score
 	if err := r.ShouldBindJSON(&s); err != nil {
-		return getInternalServerErrorResponse("internal error", core.CodeInternal)
-	}
-
-	if reflect.DeepEqual(s, model.Score{}) {
 		return getBadRequestWithMsgResponse("no payload", codeEmptyBody)
 	}
 
 	code, err := h.service.UpdateScore(r.Request.Context(), &s)
 	if err != nil {
+		if errors.Is(err, core.ErrNoSuchUser) {
+			return getBadRequestWithMsgResponse(err.Error(), core.CodeBadRequest)
+		}
+		
 		h.log.Errorw("Update score info", "err", err)
 		return getInternalServerErrorResponse("internal error", core.CodeInternal)
 	}
@@ -69,6 +93,16 @@ func (h *HTTP) updateScoreResponse(r *gin.Context) response {
 	return newOKResponse(code)
 }
 
+// @Summary  	 Update multiplicator
+// @Tags 		 Game
+// @Description  Update multiplicator
+// @Accept 	 	 json
+// @Produce 	 json
+// @Param		 message	body    model.MultipUpdate	true	"Body"
+// @Success 	 200  {object}  OKStruct
+// @Failure      400  {object}  errorResponse
+// @Failure      500  {object}  errorResponse
+// @Router       /api/v1/game/updateMultiplicator [post]“
 func (h *HTTP) updateMultiplicator(c *gin.Context) {
 	resp := h.updateMultiplicatorResponse(c)
 
@@ -78,10 +112,6 @@ func (h *HTTP) updateMultiplicator(c *gin.Context) {
 func (h *HTTP) updateMultiplicatorResponse(r *gin.Context) response {
 	var m model.MultipUpdate
 	if err := r.ShouldBindJSON(&m); err != nil {
-		return getInternalServerErrorResponse("internal error", core.CodeInternal)
-	}
-
-	if reflect.DeepEqual(m, model.Score{}) {
 		return getBadRequestWithMsgResponse("no payload", codeEmptyBody)
 	}
 
@@ -89,6 +119,12 @@ func (h *HTTP) updateMultiplicatorResponse(r *gin.Context) response {
 	if err != nil {
 		if errors.Is(err, core.ErrNoSuchMultiplicator) {
 			return getBadRequestWithMsgResponse(err.Error(), code)
+		}
+		if errors.Is(err, pg.ErrNoEnoughScore) || errors.Is(err, pg.ErrMaxLevel) {
+			return getBadRequestWithMsgResponse(err.Error(), code)
+		}
+		if errors.Is(err, core.ErrNoSuchUser) {
+			return getBadRequestWithMsgResponse(err.Error(), core.CodeBadRequest)
 		}
 		
 		h.log.Errorw("Update multiplicator info", "err", err)

@@ -12,6 +12,9 @@ import (
 	"github.com/Prokopevs/ccc/game/internal/pg"
 	"github.com/Prokopevs/ccc/game/internal/server"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+	"github.com/Prokopevs/ccc/schema"
 )
 
 const (
@@ -29,13 +32,21 @@ func run() error {
 		return err
 	}
 
+	ctx, cancel := context.WithCancel(context.Background())
+
+	conn, err := grpc.DialContext(ctx, cfg.usersGRPCAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		cancel()
+		return err
+	}
+
+	client := schema.NewUsersClient(conn)
+
+	service := core.NewService(client, d) // in
+
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
 	sugaredLogger := logger.Sugar()
-
-	ctx, cancel := context.WithCancel(context.Background())
-
-	service := core.NewService(d) // in
 
 	httpServer := server.NewHTTP(cfg.httpAddr, sugaredLogger, service) //in
 
@@ -57,6 +68,11 @@ func run() error {
 
 }
 
+//  @title Game API
+//  @version 1.0
+//	@description This is game server.
+// @host localhost:3000
+// @BasePath /api/v1/game
 func main() {
 	err := run()
 	if err != nil {

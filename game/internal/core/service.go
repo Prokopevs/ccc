@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/Prokopevs/ccc/game/internal/model"
+	"github.com/Prokopevs/ccc/schema"
 )
 
 type DB interface {
@@ -13,11 +14,13 @@ type DB interface {
 }
 
 type ServiceImpl struct {
+	usersClient schema.UsersClient
 	db DB
 }
 
-func NewService(db DB) *ServiceImpl {
+func NewService(usersClient schema.UsersClient, db DB) *ServiceImpl {
 	return &ServiceImpl{
+		usersClient: usersClient,
 		db: db,
 	}
 }

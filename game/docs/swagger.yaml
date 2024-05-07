@@ -1,0 +1,135 @@
+basePath: /api/v1/game
+definitions:
+  model.Game:
+    properties:
+      gasMining:
+        type: string
+      gasStorage:
+        type: integer
+      ownerId:
+        type: integer
+      protection:
+        type: integer
+      score:
+        type: string
+    type: object
+  model.MultipUpdate:
+    properties:
+      id:
+        type: integer
+      nameType:
+        type: string
+    type: object
+  model.Score:
+    properties:
+      id:
+        type: integer
+      score:
+        type: integer
+    type: object
+  server.OKStruct:
+    type: object
+  server.errorResponse:
+    properties:
+      code:
+        type: string
+      errorInfo:
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact: {}
+  description: This is game server.
+  title: Game API
+  version: "1.0"
+paths:
+  /api/v1/game/getGame/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get game data
+      parameters:
+      - description: user Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Game'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.errorResponse'
+      summary: Get game data
+      tags:
+      - Game
+  /api/v1/game/updateMultiplicator:
+    post:
+      consumes:
+      - application/json
+      description: Update multiplicator
+      parameters:
+      - description: Body
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/model.MultipUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.OKStruct'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.errorResponse'
+      summary: Update multiplicator
+      tags:
+      - Game
+  /api/v1/game/updateScore:
+    post:
+      consumes:
+      - application/json
+      description: Update score
+      parameters:
+      - description: Body
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/model.Score'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.OKStruct'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.errorResponse'
+      summary: Update score
+      tags:
+      - Game
+swagger: "2.0"

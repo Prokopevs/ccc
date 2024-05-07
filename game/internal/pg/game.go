@@ -26,10 +26,10 @@ func (d *db) UpdateScore(ctx context.Context, score *model.Score) error {
 
 func (d *db) UpdateMultiplicator(ctx context.Context, MultipUpdate *model.MultipUpdate) error {
 	MultiplicatorQ := fmt.Sprintf("SELECT %s FROM game WHERE ownerId=$1", MultipUpdate.NameType)
+	updateMultiplicatorQ := fmt.Sprintf("UPDATE game SET %s = %s + 1 WHERE ownerId = $1;", MultipUpdate.NameType, MultipUpdate.NameType)
 	const (
 		getScoreQ      = "select score from game where ownerId=$1"
 		updateScoreQ  = "UPDATE game SET score = score - $1 WHERE ownerId = $2;"
-		updateMultiplicatorQ  = "UPDATE game SET $1 = $1 + 1 WHERE ownerId = $2;"
 	)
 
 	prices := d.getPrices()
@@ -39,11 +39,9 @@ func (d *db) UpdateMultiplicator(ctx context.Context, MultipUpdate *model.Multip
 	}
 
 	var m int
-	fmt.Println(MultipUpdate.NameType, MultipUpdate.Id)
 	err = tx.QueryRowContext(ctx, MultiplicatorQ, MultipUpdate.Id).Scan(&m)
 	if err != nil {
 		tx.Rollback()
-		fmt.Println("here2")
 		return err
 	}
 
@@ -51,28 +49,30 @@ func (d *db) UpdateMultiplicator(ctx context.Context, MultipUpdate *model.Multip
 	err = tx.QueryRowContext(ctx, getScoreQ, MultipUpdate.Id).Scan(&s)
 	if err != nil {
 		tx.Rollback()
-		fmt.Println("here3")
+		return err
+	}
+
+	if m > 6 {
+		err = ErrMaxLevel
+		tx.Rollback()
 		return err
 	}
 
 	if s < prices[m] {
 		err = ErrNoEnoughScore
 		tx.Rollback()
-		fmt.Println("here4")
 		return err
 	}
 
 	_, err = tx.ExecContext(ctx, updateScoreQ, prices[m], MultipUpdate.Id)
 	if err != nil {
 		tx.Rollback()
-		fmt.Println("here5")
 		return err
 	}
 
-	_, err = tx.ExecContext(ctx, updateMultiplicatorQ, MultipUpdate.NameType, MultipUpdate.Id)
+	_, err = tx.ExecContext(ctx, updateMultiplicatorQ, MultipUpdate.Id)
 	if err != nil {
 		tx.Rollback()
-		fmt.Println("here6")
 		return err
 	}
 
