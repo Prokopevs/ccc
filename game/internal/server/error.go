@@ -31,3 +31,11 @@ func getInternalServerErrorResponse(msg string, code core.Code) errorResponse {
 		ErrorInfo: msg,
 	}
 }
+
+func getForbiddenRequestWithMsgResponse(msg string, code core.Code) errorResponse {
+	return errorResponse{
+		Status:    http.StatusForbidden,
+		Code:      code,
+		ErrorInfo: msg,
+	}
+}

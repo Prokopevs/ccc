@@ -19,7 +19,8 @@
 				"accept",
 				"x-requested-with",
 				"Cache-Control",
-                "initData"
+                "initData",
+				"signature"
 			],
 			"allow_methods": [
 				"POST",
@@ -34,7 +35,8 @@
 				"Content-Type",
 				"Cache-Control",
 				"Authorization",
-				"initData"
+				"initData",
+				"signature"
 			],
 			"max_age": "12h"
 		},

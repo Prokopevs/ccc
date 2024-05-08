@@ -9,4 +9,5 @@ const (
 	CodeNoMultiplicator = "NO_SUCH_MULTIPLICATOR"
 	CodeInternal = "INTERNAL_ERROR"
 	CodeBadRequest = "BAD_REQUEST"
+	CodeForbidden = "FORBIDDEN"
 )

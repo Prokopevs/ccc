@@ -80,6 +80,16 @@ func (h *HTTP) updateScoreResponse(r *gin.Context) response {
 		return getBadRequestWithMsgResponse("no payload", codeEmptyBody)
 	}
 
+	encryptedData, exists := r.Get("encryptedData")
+	if !exists {
+		return getForbiddenRequestWithMsgResponse("invalid signature provided", core.CodeForbidden)
+	}
+	encryptedBytes, _ := encryptedData.([]byte)
+	comfirmed := CheckScoreData(encryptedBytes, s)
+	if !comfirmed {
+		return getForbiddenRequestWithMsgResponse("invalid signature", core.CodeForbidden)
+	}
+
 	code, err := h.service.UpdateScore(r.Request.Context(), &s)
 	if err != nil {
 		if errors.Is(err, core.ErrNoSuchUser) {
@@ -113,6 +123,16 @@ func (h *HTTP) updateMultiplicatorResponse(r *gin.Context) response {
 	var m model.MultipUpdate
 	if err := r.ShouldBindJSON(&m); err != nil {
 		return getBadRequestWithMsgResponse("no payload", codeEmptyBody)
+	}
+
+	encryptedData, exists := r.Get("encryptedData")
+	if !exists {
+		return getForbiddenRequestWithMsgResponse("invalid signature provided", core.CodeForbidden)
+	}
+	encryptedBytes, _ := encryptedData.([]byte)
+	comfirmed := CheckMultiplicatorData(encryptedBytes, m)
+	if !comfirmed {
+		return getForbiddenRequestWithMsgResponse("invalid signature", core.CodeForbidden)
 	}
 
 	code, err := h.service.UpdateMultiplicator(r.Request.Context(), &m)

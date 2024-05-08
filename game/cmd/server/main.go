@@ -27,7 +27,7 @@ func run() error {
 		return err
 	}
 
-	d, err := pg.Connect(context.Background(), cfg.pgConnString) // in
+	d, err := pg.Connect(context.Background(), cfg.pgConnString) 
 	if err != nil {
 		return err
 	}
@@ -42,13 +42,13 @@ func run() error {
 
 	client := schema.NewUsersClient(conn)
 
-	service := core.NewService(client, d) // in
+	service := core.NewService(client, d) 
 
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
 	sugaredLogger := logger.Sugar()
 
-	httpServer := server.NewHTTP(cfg.httpAddr, sugaredLogger, service) //in
+	httpServer := server.NewHTTP(cfg.httpAddr, sugaredLogger, service, cfg.key, cfg.iv) 
 
 	wg := &sync.WaitGroup{}
 

@@ -12,6 +12,7 @@ func (d *db) AddUser(ctx context.Context, u *model.UserReq) error {
 		adduser     = "insert into users(id, firstname, username, createdat) values(:id, :firstname, :username, :createdat)"
 		addGameQ    = "insert into game(ownerId) values($1)"
 		addReferral = "insert into userReferral(inviterId, referralId) values($1, $2)"
+		UpdateScoreQ = "UPDATE game SET score = score + $1 WHERE ownerId = $2;"
 	)
 	tx, err := d.db.BeginTxx(ctx, &sql.TxOptions{})
 	if err != nil {
@@ -32,6 +33,12 @@ func (d *db) AddUser(ctx context.Context, u *model.UserReq) error {
 
 	if u.InviterId != 0 {
 		_, err = tx.ExecContext(ctx, addReferral, u.InviterId, u.Id)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+
+		_, err := d.db.ExecContext(ctx, UpdateScoreQ, 100, u.InviterId)
 		if err != nil {
 			tx.Rollback()
 			return err

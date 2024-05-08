@@ -22,6 +22,8 @@ type HTTP struct {
 
 	log     *zap.SugaredLogger
 	service Service
+	key string
+	iv string
 }
 
 func (h *HTTP) Run(ctx context.Context) {
@@ -44,10 +46,12 @@ func (h *HTTP) Run(ctx context.Context) {
 	h.innerServer.Shutdown(context.Background())
 }
 
-func NewHTTP(addr string, logger *zap.SugaredLogger, service Service) *HTTP {
+func NewHTTP(addr string, logger *zap.SugaredLogger, service Service, key string, iv string) *HTTP {
 	h := &HTTP{
 		log:     logger,
 		service: service,
+		key: key,
+		iv: iv,
 	}
 
 	r := gin.Default()
