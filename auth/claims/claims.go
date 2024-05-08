@@ -9,6 +9,12 @@ import (
 	"fmt"
 )
 
+func PKCS5UnPadding(src []byte) []byte { 
+    length := len(src) 
+    unpadding := int(src[length-1]) 
+    return src[:(length - unpadding)] 
+}
+
 func EncryptSignature(key string, iv string, signature string) ([]byte, error) {
 
 	keyByte := []byte(key)
@@ -36,5 +42,5 @@ func EncryptSignature(key string, iv string, signature string) ([]byte, error) {
 
 	cutTrailingSpaces := []byte(strings.TrimSpace(string(decodedData)))
 
-	return cutTrailingSpaces, nil
+	return PKCS5UnPadding(cutTrailingSpaces), nil
 }
