@@ -4,29 +4,27 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"encoding/base64"
+	"log"
+	"os"
 	"strings"
 
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
-type EncryptImpl struct {
-	key string
-	iv  string
-}
-
-func NewEncrypt(key string, iv string) *EncryptImpl {
-	return &EncryptImpl{
-		key: key,
-		iv:  iv,
-	}
-}
-
-func (s *EncryptImpl) EncryptSignature(initData string) gin.HandlerFunc {
+func EncryptSignature(initData string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		key := []byte(s.key)
-		iv := []byte(s.iv)
+		err := godotenv.Load(".env")
+		if err != nil {
+			c.Set("encryptedData", nil)
+			log.Fatalf("Error loading .env file")
+			return
+		}
+
+		key := []byte(os.Getenv("KEY"))
+		iv := []byte(os.Getenv("IV"))
 
 		decodedData, err := base64.StdEncoding.DecodeString(initData)
 		if err != nil {

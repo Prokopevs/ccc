@@ -9,8 +9,6 @@ type envConfig struct {
 	httpAddr      string
 	usersGRPCAddr string
 	telegramToken string
-	key           string
-	iv            string
 }
 
 func loadEnvConfig() (*envConfig, error) {
@@ -29,15 +27,6 @@ func loadEnvConfig() (*envConfig, error) {
 	}
 
 	cfg.telegramToken, err = lookupEnv("TELEGRAM_TOKEN")
-	if err != nil {
-		return nil, err
-	}
-	cfg.key, err = lookupEnv("KEY")
-	if err != nil {
-		return nil, err
-	}
-
-	cfg.iv, err = lookupEnv("IV")
 	if err != nil {
 		return nil, err
 	}

@@ -5,6 +5,7 @@ go 1.22.1
 require (
 	github.com/Prokopevs/ccc/schema v0.0.0-20240504200636-67e16efd2053
 	github.com/gin-gonic/gin v1.9.1
+	github.com/joho/godotenv v1.5.1
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
 	github.com/swaggo/swag v1.16.3

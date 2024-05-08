@@ -8,7 +8,6 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/Prokopevs/ccc/auth/claims"
 	"github.com/Prokopevs/ccc/auth/internal/core"
 	"github.com/Prokopevs/ccc/auth/internal/server"
 	"github.com/Prokopevs/ccc/schema"
@@ -28,8 +27,6 @@ func run() error {
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
-
-	claims.NewEncrypt(cfg.key, cfg.iv)
 
 	conn, err := grpc.DialContext(ctx, cfg.usersGRPCAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {

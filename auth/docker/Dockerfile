@@ -21,6 +21,8 @@ USER nobody
 
 COPY --from=builder /app/server /app/server
 
+COPY --from=builder /app/.env ../.env
+
 EXPOSE 8000
 
 ENTRYPOINT ["/app/server"]
