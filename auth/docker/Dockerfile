@@ -20,8 +20,7 @@ WORKDIR /app
 USER nobody
 
 COPY --from=builder /app/server /app/server
-
-COPY --from=builder /app/.env ../.env
+COPY --from=builder /app/claims/.env /app/claims/.env
 
 EXPOSE 8000
 

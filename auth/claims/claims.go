@@ -4,27 +4,27 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"encoding/base64"
-	"log"
 	"os"
 	"strings"
 
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 func EncryptSignature() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		err := godotenv.Load(".env")
-		if err != nil {
-			c.Set("encryptedData", nil)
-			log.Fatalf("Error loading .env file")
-			return
+		envKey, ok := os.LookupEnv("KEY")
+		if !ok {
+			panic("provede envKey")
+		}
+		ivKey, ok := os.LookupEnv("IV")
+		if !ok {
+			panic("provede ivKey")
 		}
 
-		key := []byte(os.Getenv("KEY"))
-		iv := []byte(os.Getenv("IV"))
+		key := []byte(envKey)
+		iv := []byte(ivKey)
 
 		signature := c.Request.Header.Get("signature")
 
