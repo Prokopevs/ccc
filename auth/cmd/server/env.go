@@ -9,6 +9,7 @@ type envConfig struct {
 	httpAddr      string
 	usersGRPCAddr string
 	telegramToken string
+	key string
 }
 
 func loadEnvConfig() (*envConfig, error) {
@@ -30,6 +31,12 @@ func loadEnvConfig() (*envConfig, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	cfg.key, err = lookupEnv("KEY")
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(cfg.key)
 
 	return cfg, nil
 }
