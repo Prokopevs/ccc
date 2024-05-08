@@ -14,7 +14,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func EncryptSignature(initData string) gin.HandlerFunc {
+func EncryptSignature() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := godotenv.Load(".env")
 		if err != nil {
@@ -26,7 +26,9 @@ func EncryptSignature(initData string) gin.HandlerFunc {
 		key := []byte(os.Getenv("KEY"))
 		iv := []byte(os.Getenv("IV"))
 
-		decodedData, err := base64.StdEncoding.DecodeString(initData)
+		signature := c.Request.Header.Get("signature")
+
+		decodedData, err := base64.StdEncoding.DecodeString(signature)
 		if err != nil {
 			fmt.Println("Error decoding data:", err)
 			c.Set("encryptedData", nil)
