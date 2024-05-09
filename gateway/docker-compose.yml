@@ -15,6 +15,16 @@ services:
        - ./postgres:/data/postgres
     networks:
       - api
+  cache:
+    image: redis:7.2.4
+    restart: unless-stopped
+    networks:
+      - api
+    ports:
+      - '6380:6379'
+    command: --requirepass ${RD_PASSWORD}
+    environment:
+      - REDIS_PASSWORD=${RD_PASSWORD}
   auth-api:
     image: game/auth-api:latest
     restart: unless-stopped
@@ -43,12 +53,14 @@ services:
       - auth-api
       - gamedbCont
       - users-api
+      - cache
     environment:
       HTTP_ADDR: :3000
       PG_CONN: postgres://${PG_USER}:${PG_PASSWORD}@gamedbCont:5432/gamedb?sslmode=disable
       USERS_GRPC_ADDR: users-api:8000
       KEY: ${KEY}
       IV: ${IV}
+      RD_CONN: redis://default:${RD_PASSWORD}@cache:6379/0
   krakend_ce:
     image: devopsfaith/krakend:2.6
     volumes:

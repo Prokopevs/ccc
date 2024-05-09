@@ -5,8 +5,8 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/Prokopevs/ccc/game/internal/model"
 	"github.com/Prokopevs/ccc/game/internal/core"
+	"github.com/Prokopevs/ccc/game/internal/model"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
@@ -17,6 +17,10 @@ type Service interface {
 	UpdateMultiplicator(context.Context, *model.MultipUpdate) (core.Code, error)
 }
 
+type Redis interface {
+	IsSignatureExist(context.Context, string, string) (bool, error)
+}
+
 type HTTP struct {
 	innerServer *http.Server
 
@@ -24,6 +28,7 @@ type HTTP struct {
 	service Service
 	key string
 	iv string
+	rd Redis
 }
 
 func (h *HTTP) Run(ctx context.Context) {
@@ -46,12 +51,13 @@ func (h *HTTP) Run(ctx context.Context) {
 	h.innerServer.Shutdown(context.Background())
 }
 
-func NewHTTP(addr string, logger *zap.SugaredLogger, service Service, key string, iv string) *HTTP {
+func NewHTTP(addr string, logger *zap.SugaredLogger, service Service, key string, iv string, rd Redis) *HTTP {
 	h := &HTTP{
 		log:     logger,
 		service: service,
 		key: key,
 		iv: iv,
+		rd: rd,
 	}
 
 	r := gin.Default()

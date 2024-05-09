@@ -6,22 +6,24 @@ import (
 )
 
 type envConfig struct {
-	pgConnString  string
-	httpAddr      string
-	usersGRPCAddr string
-	key           string
-	iv            string
+	pgConnString    string
+	httpAddr        string
+	usersGRPCAddr   string
+	key             string
+	iv              string
+	redisConnString string
 }
 
 func loadEnvConfig() (*envConfig, error) {
 	const (
 		provideEnvErrorMsg = `please provide "%s" environment variable`
 
-		pgConnStringEnv = "PG_CONN"
-		httpAddrEnv     = "HTTP_ADDR"
+		pgConnStringEnv    = "PG_CONN"
+		httpAddrEnv        = "HTTP_ADDR"
 		usersGRPCAddrEnv   = "USERS_GRPC_ADDR"
 		keyEnv             = "KEY"
 		ivEnv              = "IV"
+		redisConnStringEnv = "RD_CONN"
 	)
 
 	var ok bool
@@ -51,6 +53,11 @@ func loadEnvConfig() (*envConfig, error) {
 	cfg.iv, ok = os.LookupEnv(ivEnv)
 	if !ok {
 		return nil, fmt.Errorf(provideEnvErrorMsg, ivEnv)
+	}
+
+	cfg.redisConnString, ok = os.LookupEnv(redisConnStringEnv)
+	if !ok {
+		return nil, fmt.Errorf(provideEnvErrorMsg, redisConnStringEnv)
 	}
 
 	return cfg, nil

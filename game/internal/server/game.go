@@ -2,9 +2,11 @@ package server
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/Prokopevs/ccc/game/internal/core"
+	"github.com/Prokopevs/ccc/game/internal/encrypt"
 	"github.com/Prokopevs/ccc/game/internal/model"
 	"github.com/Prokopevs/ccc/game/internal/pg"
 	"github.com/gin-gonic/gin"
@@ -75,6 +77,7 @@ func (h *HTTP) updateScore(c *gin.Context) {
 }
 
 func (h *HTTP) updateScoreResponse(r *gin.Context) response {
+	signature := r.Request.Header.Get("signature")
 	var s model.Score
 	if err := r.ShouldBindJSON(&s); err != nil {
 		return getBadRequestWithMsgResponse("no payload", codeEmptyBody)
@@ -85,7 +88,17 @@ func (h *HTTP) updateScoreResponse(r *gin.Context) response {
 		return getForbiddenRequestWithMsgResponse("invalid signature provided", core.CodeForbidden)
 	}
 	encryptedBytes, _ := encryptedData.([]byte)
-	comfirmed := CheckScoreData(encryptedBytes, s)
+
+	key := fmt.Sprint(s.Id)+"score"
+	exist, err := h.rd.IsSignatureExist(r.Request.Context(), key, signature)
+	if err != nil {
+		return getInternalServerErrorResponse(err.Error(), core.CodeInternal)
+	}
+	if exist {
+		return getForbiddenRequestWithMsgResponse("signature already exist", core.CodeForbidden)
+	}
+
+	comfirmed := encrypt.CheckScoreData(encryptedBytes, s)
 	if !comfirmed {
 		return getForbiddenRequestWithMsgResponse("invalid signature", core.CodeForbidden)
 	}
@@ -120,6 +133,7 @@ func (h *HTTP) updateMultiplicator(c *gin.Context) {
 }
 
 func (h *HTTP) updateMultiplicatorResponse(r *gin.Context) response {
+	signature := r.Request.Header.Get("signature")
 	var m model.MultipUpdate
 	if err := r.ShouldBindJSON(&m); err != nil {
 		return getBadRequestWithMsgResponse("no payload", codeEmptyBody)
@@ -130,7 +144,17 @@ func (h *HTTP) updateMultiplicatorResponse(r *gin.Context) response {
 		return getForbiddenRequestWithMsgResponse("invalid signature provided", core.CodeForbidden)
 	}
 	encryptedBytes, _ := encryptedData.([]byte)
-	comfirmed := CheckMultiplicatorData(encryptedBytes, m)
+
+	key := fmt.Sprint(m.Id)+m.NameType+"multiplicator"
+	exist, err := h.rd.IsSignatureExist(r.Request.Context(), key, signature)
+	if err != nil {
+		return getInternalServerErrorResponse(err.Error(), core.CodeInternal)
+	}
+	if exist {
+		return getForbiddenRequestWithMsgResponse("signature already exist", core.CodeForbidden)
+	}
+
+	comfirmed := encrypt.CheckMultiplicatorData(encryptedBytes, m)
 	if !comfirmed {
 		return getForbiddenRequestWithMsgResponse("invalid signature", core.CodeForbidden)
 	}

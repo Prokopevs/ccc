@@ -10,11 +10,12 @@ import (
 
 	"github.com/Prokopevs/ccc/game/internal/core"
 	"github.com/Prokopevs/ccc/game/internal/pg"
+	"github.com/Prokopevs/ccc/game/internal/redis"
 	"github.com/Prokopevs/ccc/game/internal/server"
+	"github.com/Prokopevs/ccc/schema"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"github.com/Prokopevs/ccc/schema"
 )
 
 const (
@@ -28,6 +29,11 @@ func run() error {
 	}
 
 	d, err := pg.Connect(context.Background(), cfg.pgConnString) 
+	if err != nil {
+		return err
+	}
+
+	r, err := redis.Connect(cfg.redisConnString) 
 	if err != nil {
 		return err
 	}
@@ -48,7 +54,7 @@ func run() error {
 	defer logger.Sync()
 	sugaredLogger := logger.Sugar()
 
-	httpServer := server.NewHTTP(cfg.httpAddr, sugaredLogger, service, cfg.key, cfg.iv) 
+	httpServer := server.NewHTTP(cfg.httpAddr, sugaredLogger, service, cfg.key, cfg.iv, r) 
 
 	wg := &sync.WaitGroup{}
 
