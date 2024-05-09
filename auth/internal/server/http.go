@@ -10,6 +10,7 @@ import (
 	"go.uber.org/zap"
 )
 
+//go:generate mockgen -source=http.go -destination=mocks/mock.go
 type Service interface {
 	GetUserInfo(context.Context, string, int) (*core.UserInfo, core.Code, error)
 	GetUserReferrals( context.Context, int) ([]*core.UserReferrals, core.Code, error)
