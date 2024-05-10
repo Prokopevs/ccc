@@ -32,7 +32,7 @@ services:
       - api
     environment:
       USERS_GRPC_ADDR: users-api:8000
-      HTTP_SERVER_ADDR: :3000
+      HTTP_SERVER_ADDR: :4000
       TELEGRAM_TOKEN: ${TELEGRAM_TOKEN}
   users-api:
     image: game/users-api:latest
@@ -55,14 +55,14 @@ services:
       - users-api
       - cache
     environment:
-      HTTP_ADDR: :3000
+      HTTP_ADDR: :4000
       PG_CONN: postgres://${PG_USER}:${PG_PASSWORD}@gamedbCont:5432/gamedb?sslmode=disable
       USERS_GRPC_ADDR: users-api:8000
       KEY: ${KEY}
       IV: ${IV}
       RD_CONN: redis://default:${RD_PASSWORD}@cache:6379/0
   krakend_ce:
-    image: devopsfaith/krakend:2.6
+    image: devopsfaith/krakend:2.6.2
     volumes:
       - ./krakend:/etc/krakend
     restart: unless-stopped
@@ -75,6 +75,30 @@ services:
       - game-api
     networks:
       - api
+  prometheus:
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    networks:
+      - api
+    volumes:
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+  grafana:
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    networks:
+      - api
+    environment:
+      GF_SECURITY_ADMIN_USER: krakend
+      GF_SECURITY_ADMIN_PASSWORD: krakend
+      GF_AUT_ANONYMOUS_ENABLED: "true"
+    volumes:
+      - "./conf/provisioning/datasources:/etc/grafana/provisioning/datasources"
+      - "./conf/provisioning/dashboards:/etc/grafana/provisioning/dashboards"
+      - "./conf/data/dashboards:/var/lib/grafana/dashboards"
 
 networks:
   api:

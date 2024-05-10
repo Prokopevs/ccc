@@ -77,7 +77,7 @@ func run() error {
 //  @title Game API
 //  @version 1.0
 //	@description This is game server.
-// @host localhost:3000
+// @host localhost:4000
 // @BasePath /api/v1/game
 func main() {
 	err := run()

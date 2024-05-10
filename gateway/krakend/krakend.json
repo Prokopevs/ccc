@@ -1,10 +1,25 @@
 {
 	"version": 3,
+	
 	"name": "api-proxy",
 	"port": 8080,
 	"timeout": "30s",
 	"cache_ttl": 0,
 	"extra_config": {
+		"telemetry/opentelemetry": {
+            "service_name": "krakend_prometheus_service",
+            "metric_reporting_period": 1,
+            "exporters": {
+                "prometheus": [
+                    {
+                        "name": "local_prometheus",
+                        "port": 9090,
+                        "process_metrics": true,
+                        "go_metrics": true
+                    }
+                ]
+            }
+        },
 		"github.com/devopsfaith/krakend/http": {
 			"return_error_details": "backend_alias"
 		},
@@ -65,7 +80,7 @@
 			"backend": [{
 				"url_pattern": "/api/v1/auth/me",
 				"host": [
-					"http://auth-api:3000"
+					"http://auth-api:4000"
 				],
 				"encoding": "no-op",
 				"disable_host_sanitize": true
@@ -84,7 +99,7 @@
 			"backend": [{
 				"url_pattern": "/api/v1/auth/referrals/{id}",
 				"host": [
-					"http://auth-api:3000"
+					"http://auth-api:4000"
 				],
 				"encoding": "no-op",
 				"disable_host_sanitize": true
@@ -103,7 +118,7 @@
 			"backend": [{
 				"url_pattern": "/api/v1/game/getGame/{id}",
 				"host": [
-					"http://game-api:3000"
+					"http://game-api:4000"
 				],
 				"encoding": "no-op",
 				"disable_host_sanitize": true
@@ -122,7 +137,7 @@
 			"backend": [{
 				"url_pattern": "/api/v1/game/updateScore",
 				"host": [
-					"http://game-api:3000"
+					"http://game-api:4000"
 				],
 				"encoding": "no-op",
 				"disable_host_sanitize": true
@@ -141,7 +156,7 @@
 			"backend": [{
 				"url_pattern": "/api/v1/game/updateMultiplicator",
 				"host": [
-					"http://game-api:3000"
+					"http://game-api:4000"
 				],
 				"encoding": "no-op",
 				"disable_host_sanitize": true

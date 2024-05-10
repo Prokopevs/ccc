@@ -6,7 +6,7 @@
         "contact": {},
         "version": "1.0"
     },
-    "host": "localhost:3000",
+    "host": "localhost:4000",
     "basePath": "/api/v1/auth",
     "paths": {
         "/api/v1/auth/me": {
@@ -91,6 +91,12 @@
                             }
                         }
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/server.errorResponse"
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
@@ -111,16 +117,16 @@
         "core.Code": {
             "type": "string",
             "enum": [
-                "INVALID_INITDATA",
-                "INVALID_USER_ID",
                 "OK",
-                "INTERNAL_ERROR"
+                "INTERNAL_ERROR",
+                "INVALID_INITDATA",
+                "INVALID_USER_ID"
             ],
             "x-enum-varnames": [
-                "CodeInvalidInitData",
-                "CodeInvalidUserID",
                 "CodeOK",
-                "CodeInternal"
+                "CodeInternal",
+                "CodeInvalidInitData",
+                "CodeInvalidUserID"
             ]
         },
         "core.UserReferrals": {

@@ -97,6 +97,12 @@ const docTemplate = `{
                             }
                         }
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/server.errorResponse"
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
@@ -117,16 +123,16 @@ const docTemplate = `{
         "core.Code": {
             "type": "string",
             "enum": [
-                "INVALID_INITDATA",
-                "INVALID_USER_ID",
                 "OK",
-                "INTERNAL_ERROR"
+                "INTERNAL_ERROR",
+                "INVALID_INITDATA",
+                "INVALID_USER_ID"
             ],
             "x-enum-varnames": [
-                "CodeInvalidInitData",
-                "CodeInvalidUserID",
                 "CodeOK",
-                "CodeInternal"
+                "CodeInternal",
+                "CodeInvalidInitData",
+                "CodeInvalidUserID"
             ]
         },
         "core.UserReferrals": {
@@ -174,7 +180,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:3000",
+	Host:             "localhost:4000",
 	BasePath:         "/api/v1/auth",
 	Schemes:          []string{},
 	Title:            "Game API",

@@ -1,0 +1,16 @@
+global:
+  scrape_interval:     15s
+
+rule_files:
+  # - "first.rules"
+  # - "second.rules"
+
+scrape_configs:
+  - job_name: prometheus
+    scrape_interval: 5s
+    metrics_path: '/metrics'
+    static_configs:
+      - targets:
+        - 'krakend_ce:9090'
+        labels:
+          app: kotel_example
