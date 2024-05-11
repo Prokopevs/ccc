@@ -1,6 +1,7 @@
 How to start:
     1) make build_images
     2) sudo PG_USER=postgres PG_PASSWORD=postgres RD_PASSWORD=postgres KEY=1234567812345678 IV=1234567812345678 TELEGRAM_TOKEN= docker-compose up
+        (if err address already in use => sudo lsof -i :5432 => sudo kill PID) 
     3) create database gamedb in docker postgres image
         - docker exec -it gamedbCont psql -U postgres
         - create database gamedb

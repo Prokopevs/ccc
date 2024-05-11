@@ -77,3 +77,9 @@ func (s *ServiceImpl) UpdateMultiplicator(ctx context.Context, MultipUpdate *mod
 
 	return CodeOK, err
 }
+
+func (s *ServiceImpl) GetPrices() map[int]int {
+	prices := s.db.GetPrices()
+	
+	return prices
+}

@@ -12,6 +12,7 @@ func (h *HTTP) setRoutes(r *gin.Engine) {
 	api := r.Group("/api/v1/game") 
 	{
 		api.GET("/getGame/:id", h.getGame)
+		api.GET("/getPrices", h.getPrices)
 		api.POST("/updateScore", encrypt.Encrypt(h.key, h.iv), h.updateScore)
 		api.POST("/updateMultiplicator", encrypt.Encrypt(h.key, h.iv), h.updateMultiplicator)
 		api.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

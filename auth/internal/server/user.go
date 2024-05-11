@@ -27,7 +27,7 @@ type response interface {
 // @Failure      401  {object}  errorResponse
 // @Failure      500  {object}  errorResponse
 // @Router       /api/v1/auth/me [get]“
-func (h *HTTP) me(c *gin.Context) {
+func (h *HTTP) Me(c *gin.Context) {
 	resp := h.getMeResponse(c)
 
 	resp.writeJSON(c)
@@ -74,7 +74,7 @@ func (h *HTTP) getMeResponse(r *gin.Context) response {
 // @Failure      401  {object}  errorResponse
 // @Failure      500  {object}  errorResponse
 // @Router       /api/v1/auth/referrals/{id} [get]“
-func (h *HTTP) referrals(c *gin.Context) {
+func (h *HTTP) Referrals(c *gin.Context) {
 	resp := h.getReferralResponse(c)
 
 	resp.writeJSON(c)

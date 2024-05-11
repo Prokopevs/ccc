@@ -11,6 +11,7 @@ type DB interface {
 	GetGame(context.Context, int) (*model.Game, error)
 	UpdateScore(context.Context, *model.Score) (error)
 	UpdateMultiplicator(context.Context, *model.MultipUpdate) (error)
+	GetPrices() (map[int]int)
 }
 
 type ServiceImpl struct {

@@ -8,11 +8,11 @@ import (
 )
 
 type GameResponse struct {
-	OwnerId    int    `db:"ownerId"`
-	Score      string `db:"score"`
-	GasStorage int    `db:"gasStorage"`
-	GasMining  string `db:"gasMining"`
-	Protection int    `db:"protection"`
+	OwnerId    int `db:"ownerId"`
+	Score      int `db:"score"`
+	GasStorage int `db:"gasStorage"`
+	GasMining  int `db:"gasMining"`
+	Protection int `db:"protection"`
 }
 
 func (u *GameResponse) writeJSON(c *gin.Context) {
@@ -25,5 +25,18 @@ func convertCoreGameToResponse(u *model.Game) *GameResponse {
 		GasStorage: u.GasStorage,
 		GasMining:  u.GasMining,
 		Protection: u.Protection,
+	}
+}
+
+type PriceResponse struct {
+	Data map[int]int
+}
+
+func (u *PriceResponse) writeJSON(c *gin.Context) {
+	writeJSONResponse(c, http.StatusOK, u)
+}
+func convertPriceToResponse(u map[int]int) *PriceResponse {
+	return &PriceResponse{
+		Data: u,
 	}
 }

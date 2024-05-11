@@ -23,9 +23,9 @@ type UserInfo struct {
 }
 
 type UserReferrals struct {
-	ReferralId int
-	Firstname  string
-	Username   string
+	ReferralId int    `json:"referralId"`
+	Firstname  string `json:"firstname"`
+	Username   string `json:"username"`
 }
 
 func (s *ServiceImpl) GetUserInfo(ctx context.Context, initData string, inviterId int) (*UserInfo, Code, error) {

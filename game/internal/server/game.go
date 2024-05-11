@@ -177,3 +177,25 @@ func (h *HTTP) updateMultiplicatorResponse(r *gin.Context) response {
 
 	return newOKResponse(code)
 }
+
+
+
+// @Summary  	 Get prices
+// @Tags 		 Game
+// @Description  Get prices
+// @Accept 	 	 json
+// @Produce 	 json
+// @Success 	 200  {object}  PriceResponse
+// @Failure      400  {object}  errorResponse
+// @Failure      500  {object}  errorResponse
+// @Router       /api/v1/game/getPrices [get]“
+func (h *HTTP) getPrices(c *gin.Context) {
+	resp := h.getPricesResponse()
+	resp.writeJSON(c)
+}
+
+func (h *HTTP) getPricesResponse() response {
+	prices := h.service.GetPrices()
+
+	return convertPriceToResponse(prices)
+}

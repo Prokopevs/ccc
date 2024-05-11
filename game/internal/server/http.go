@@ -15,6 +15,7 @@ type Service interface {
 	GetGame(context.Context, int) (*model.Game, error)
 	UpdateScore(context.Context, *model.Score) (core.Code, error)
 	UpdateMultiplicator(context.Context, *model.MultipUpdate) (core.Code, error)
+	GetPrices() (map[int]int)
 }
 
 type Redis interface {

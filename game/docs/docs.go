@@ -59,6 +59,41 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/game/getPrices": {
+            "get": {
+                "description": "Get prices",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Game"
+                ],
+                "summary": "Get prices",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server.PriceResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/server.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/server.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/game/updateMultiplicator": {
             "post": {
                 "description": "Update multiplicator",
@@ -157,7 +192,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "gasMining": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "gasStorage": {
                     "type": "integer"
@@ -169,7 +204,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "score": {
-                    "type": "string"
+                    "type": "integer"
                 }
             }
         },
@@ -197,6 +232,17 @@ const docTemplate = `{
         },
         "server.OKStruct": {
             "type": "object"
+        },
+        "server.PriceResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "integer"
+                    }
+                }
+            }
         },
         "server.errorResponse": {
             "type": "object",

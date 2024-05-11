@@ -31,7 +31,7 @@ func (d *db) UpdateMultiplicator(ctx context.Context, MultipUpdate *model.Multip
 		updateScoreQ  = "UPDATE game SET score = score - $1 WHERE ownerId = $2;"
 	)
 
-	prices := d.getPrices()
+	prices := d.GetPrices()
 	tx, err := d.db.BeginTxx(ctx, &sql.TxOptions{})
 	if err != nil {
 		return err

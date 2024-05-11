@@ -21,3 +21,7 @@ func Connect(ctx context.Context, addr string) (*db, error) {
 		db: d,
 	}, nil
 }
+
+func Newdb(dbInstance *sqlx.DB) *db {
+	return &db{db: dbInstance}
+}

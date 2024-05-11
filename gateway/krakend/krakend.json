@@ -125,6 +125,25 @@
 			}]
 		},
 		{
+			"endpoint": "/api/v1/game/getPrices",
+			"method": "GET",
+			"output_encoding": "no-op",
+			"input_query_strings": [
+				"*"
+			],
+			"input_headers": [
+				"*"
+			],
+			"backend": [{
+				"url_pattern": "/api/v1/game/getPrices",
+				"host": [
+					"http://game-api:4000"
+				],
+				"encoding": "no-op",
+				"disable_host_sanitize": true
+			}]
+		},
+		{
 			"endpoint": "/api/v1/game/updateScore",
 			"method": "POST",
 			"output_encoding": "no-op",
