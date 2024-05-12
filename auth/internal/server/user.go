@@ -42,7 +42,7 @@ func (h *HTTP) getMeResponse(r *gin.Context) response {
 	id, ok := r.GetQuery("inviterId")
 	idInt := 0
 	var err error
-	if ok {
+	if ok && id != "" {
 		idInt, err = strconv.Atoi(id)
 		if err != nil {
 			return getInternalServerErrorResponse("internal error", core.CodeInternal)
