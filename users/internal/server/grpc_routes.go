@@ -57,3 +57,14 @@ func (g *GRPC) GetUserReferrals(ctx context.Context, req *schema.GetUserReferral
 		Referrals: convertCoreReferralsToPB(referrals),
 	}, nil
 }
+
+func (g *GRPC) GetUsers(ctx context.Context, req *schema.GetUsersRequest) (*schema.GetUsersResponse, error) {
+	users, err := g.service.GetUsers(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &schema.GetUsersResponse{
+		Users: convertCoreUsersToPB(users),
+	}, nil
+}

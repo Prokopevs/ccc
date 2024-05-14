@@ -42,7 +42,7 @@ func run() error {
 	defer logger.Sync()
 	sugaredLogger := logger.Sugar()
 
-	httpServer := server.NewHTTP(cfg.httpAddr, sugaredLogger, service)
+	httpServer := server.NewHTTP(cfg.httpAddr, sugaredLogger, service, cfg.password)
 
 	wg := &sync.WaitGroup{}
 

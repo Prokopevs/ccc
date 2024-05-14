@@ -28,6 +28,12 @@ type UserReferrals struct {
 	Username   string `json:"username"`
 }
 
+type User struct { 
+	Id        int        `db:"id,omitempty"`
+	Firstname string     `db:"firstname,omitempty"`
+	Username  string     `db:"username,omitempty"`
+}
+
 func (s *ServiceImpl) GetUserInfo(ctx context.Context, initData string, inviterId int) (*UserInfo, Code, error) {
 	user, err := ValidateToken(initData, s.token)
 	if err != nil {
@@ -73,4 +79,13 @@ func (s *ServiceImpl) GetUserReferrals(ctx context.Context, id int) ([]*UserRefe
 	}
 
 	return convertPBUserReferralsToUserReferrals(referrals.Referrals), CodeOK, nil
+}
+
+func (s *ServiceImpl) GetUsers(ctx context.Context) ([]*User, Code, error) {
+	users, err := s.usersClient.GetUsers(ctx, &schema.GetUsersRequest{})
+	if err != nil {
+		return nil, CodeInternal, err
+	}
+
+	return convertPBUsersToUsers(users.Users), CodeOK, nil
 }

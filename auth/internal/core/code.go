@@ -5,4 +5,5 @@ type Code string
 const (
 	CodeOK       Code = "OK"
 	CodeInternal Code = "INTERNAL_ERROR"
+	CodeBadRequest = "BAD_REQUEST"
 )

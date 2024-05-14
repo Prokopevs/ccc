@@ -38,7 +38,7 @@ func (d *db) AddUser(ctx context.Context, u *model.UserReq) error {
 			return err
 		}
 
-		_, err := d.db.ExecContext(ctx, UpdateScoreQ, 100, u.InviterId)
+		_, err := tx.ExecContext(ctx, UpdateScoreQ, 100, u.InviterId)
 		if err != nil {
 			tx.Rollback()
 			return err
@@ -76,4 +76,14 @@ func (d *db) GetUserReferrals(ctx context.Context, id int) ([]*model.UserReferra
 	err := d.db.SelectContext(ctx, &referrals, q, id)
 
 	return referrals, err
+}
+
+func (d *db) GetUsers(ctx context.Context) ([]*model.UserRes, error) {
+	const q = "select * from users"
+
+	u := []*model.UserRes{}
+
+	err := d.db.SelectContext(ctx, &u, q)
+
+	return u, err
 }

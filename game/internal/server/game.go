@@ -44,7 +44,7 @@ func (h *HTTP) getGameResponse(r *gin.Context) response {
 	}
 	idInt, err := strconv.Atoi(id)
 	if err != nil {
-		return getInternalServerErrorResponse("internal error", core.CodeInternal)
+		return getBadRequestWithMsgResponse("wrong id provided", core.CodeBadRequest)
 	}
 
 	gameInfo, err := h.service.GetGame(r.Request.Context(), idInt)
@@ -78,9 +78,18 @@ func (h *HTTP) updateScore(c *gin.Context) {
 
 func (h *HTTP) updateScoreResponse(r *gin.Context) response {
 	signature := r.Request.Header.Get("signature")
+	if signature == "" {
+		return getForbiddenRequestWithMsgResponse("signature not provided", core.CodeForbidden)
+	}
+	
 	var s model.Score
 	if err := r.ShouldBindJSON(&s); err != nil {
 		return getBadRequestWithMsgResponse("no payload", codeEmptyBody)
+	}
+
+	cod := validateScore(s)
+	if cod != core.CodeOK {
+		return getBadRequestWithMsgResponse("invalid body", cod)
 	}
 
 	encryptedData, exists := r.Get("encryptedData")
@@ -92,6 +101,7 @@ func (h *HTTP) updateScoreResponse(r *gin.Context) response {
 	key := fmt.Sprint(s.Id)+"score"
 	exist, err := h.rd.IsSignatureExist(r.Request.Context(), key, signature)
 	if err != nil {
+		h.log.Errorw("Update score info", "err", err)
 		return getInternalServerErrorResponse(err.Error(), core.CodeInternal)
 	}
 	if exist {
@@ -134,9 +144,18 @@ func (h *HTTP) updateMultiplicator(c *gin.Context) {
 
 func (h *HTTP) updateMultiplicatorResponse(r *gin.Context) response {
 	signature := r.Request.Header.Get("signature")
+	if signature == "" {
+		return getForbiddenRequestWithMsgResponse("signature not provided", core.CodeForbidden)
+	}
+
 	var m model.MultipUpdate
 	if err := r.ShouldBindJSON(&m); err != nil {
 		return getBadRequestWithMsgResponse("no payload", codeEmptyBody)
+	}
+
+	cod := validateMultiplicator(m)
+	if cod != core.CodeOK {
+		return getBadRequestWithMsgResponse("invalid body", cod)
 	}
 
 	encryptedData, exists := r.Get("encryptedData")
@@ -148,6 +167,7 @@ func (h *HTTP) updateMultiplicatorResponse(r *gin.Context) response {
 	key := fmt.Sprint(m.Id)+m.NameType+"multiplicator"
 	exist, err := h.rd.IsSignatureExist(r.Request.Context(), key, signature)
 	if err != nil {
+		h.log.Errorw("Update multiplicator info", "err", err)
 		return getInternalServerErrorResponse(err.Error(), core.CodeInternal)
 	}
 	if exist {

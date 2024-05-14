@@ -11,6 +11,7 @@ type DB interface {
 	GetUser(context.Context, int) (*model.UserRes, error)
 	IsUserWithIdExists(context.Context, int) (bool, error)
 	GetUserReferrals(context.Context, int) ([]*model.UserReferrals, error)
+	GetUsers(context.Context) ([]*model.UserRes, error)
 }
 
 type ServiceImpl struct {

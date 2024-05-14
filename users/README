@@ -1,6 +1,6 @@
 commant to start: 
 1 make build
-2 PG_CONN=postgres://postgres:...@localhost:5432/gamedb?sslmode=disable GRPC_SERVER_ADDR=:8000 ./server
+2 PG_CONN=postgres://postgres:postgres@localhost:5432/gamedb?sslmode=disable GRPC_SERVER_ADDR=:8000 ./server
 
 docker posgress image required!
 

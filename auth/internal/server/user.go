@@ -45,7 +45,7 @@ func (h *HTTP) getMeResponse(r *gin.Context) response {
 	if ok && id != "" {
 		idInt, err = strconv.Atoi(id)
 		if err != nil {
-			return getInternalServerErrorResponse("internal error", core.CodeInternal)
+			return getBadRequestWithMsgResponse("wrong inviterId provided", core.CodeBadRequest)
 		}
 	}
 
@@ -87,7 +87,7 @@ func (h *HTTP) getReferralResponse(r *gin.Context) response {
 
 	idInt, err := strconv.Atoi(id)
 	if err != nil {
-		return getInternalServerErrorResponse("internal error", core.CodeInternal)
+		return getBadRequestWithMsgResponse("wrong id provided", core.CodeBadRequest)
 	}
 
 	referrals, code, err := h.service.GetUserReferrals(r.Request.Context(), idInt)
@@ -100,4 +100,36 @@ func (h *HTTP) getReferralResponse(r *gin.Context) response {
 	}
 
 	return newOKResponse(referrals)
+}
+
+
+// @Summary  	 Get user referrals
+// @Tags 		 Auth
+// @Description  Get user referrals
+// @Accept 	 	 json
+// @Produce 	 json
+// @Param 		 id path int true "Inviter Id"
+// @Success 	 200  {array}   core.UserReferrals
+// @Failure      400  {object}  errorResponse
+// @Failure      401  {object}  errorResponse
+// @Failure      500  {object}  errorResponse
+// @Router       /api/v1/auth/referrals/{id} [get]“
+func (h *HTTP) Users(c *gin.Context) {
+	resp := h.getUsersResponse(c)
+
+	resp.writeJSON(c)
+}
+func (h *HTTP) getUsersResponse(r *gin.Context) response {
+	password := r.Request.Header.Get("password")
+	if password == "" || password != h.password {
+		return getUnauthorizedErrorWithMsgResponse("wrong header", codeNoHeader)
+	}
+
+	users, code, err := h.service.GetUsers(r.Request.Context())
+	if err != nil {
+		h.log.Errorw("Get users response.", "err", err)
+		return getInternalServerErrorResponse("internal error", code)
+	}
+
+	return newOKUsersResponse(users)
 }

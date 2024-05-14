@@ -20,6 +20,15 @@ func newOKResponse(data []*core.UserReferrals) response {
 	}
 }
 
+func newOKUsersResponse(data []*core.User) response {
+	if len(data) == 0 {
+        data = []*core.User{}
+    }
+	return &okResponse{
+		Data: data,
+	}
+}
+
 func (o *okResponse) writeJSON(c *gin.Context) {
 	writeJSONResponse(c, http.StatusOK, o)
 }

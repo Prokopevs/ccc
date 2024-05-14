@@ -11,9 +11,9 @@ type MultipUpdate struct {
 }
 
 type Game struct {
-	OwnerId    int `db:"ownerid"`
-	Score      int `db:"score"`
-	GasStorage int `db:"gasstorage"`
-	GasMining  int `db:"gasmining"`
-	Protection int `db:"protection"`
+	OwnerId    int `db:"ownerid" json:"ownerId"`
+	Score      int `db:"score" json:"score"`
+	GasStorage int `db:"gasstorage" json:"gasStorage"`
+	GasMining  int `db:"gasmining" json:"gasMining"`
+	Protection int `db:"protection" json:"protection"`
 }

@@ -12,6 +12,7 @@ func (h *HTTP) setRoutes(r *gin.Engine) {
 	{
 		api.GET("/me", h.Me)
 		api.GET("/referrals/:id", h.Referrals)
+		api.GET("/users", h.Users)
 		api.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 }

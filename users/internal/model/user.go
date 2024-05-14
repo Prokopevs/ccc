@@ -10,7 +10,7 @@ type UserReq struct {
 	Createdat *time.Time
 }
 
-type UserRes struct { 
+type UserRes struct {
 	Id        int        `db:"id,omitempty"`
 	Firstname string     `db:"firstname,omitempty"`
 	Username  string     `db:"username,omitempty"`
@@ -18,7 +18,7 @@ type UserRes struct {
 }
 
 type UserReferrals struct {
-    ReferralId int64    `db:"referralid,omitempty"`
-    Firstname  string `db:"firstname,omitempty"`
-    Username   string `db:"username,omitempty"`
+	ReferralId int    `db:"referralid,omitempty"`
+	Firstname  string `db:"firstname,omitempty"`
+	Username   string `db:"username,omitempty"`
 }

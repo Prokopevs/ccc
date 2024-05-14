@@ -64,3 +64,11 @@ func (s *ServiceImpl) GetUserReferrals(ctx context.Context, id int) ([]*model.Us
 	return referrals, true, nil
 }
 
+func (s *ServiceImpl) GetUsers(ctx context.Context) ([]*model.UserRes, error) {
+	users, err := s.db.GetUsers(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}

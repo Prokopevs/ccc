@@ -4,7 +4,7 @@ go 1.22.1
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.2
-	github.com/Prokopevs/ccc/auth v0.0.0-20240508153512-1ab3e77eeebc
+	github.com/Prokopevs/ccc/auth v0.0.0-20240512194025-0eaf8db9eb9f
 	github.com/Prokopevs/ccc/schema v0.0.0-20240506151228-38d29a51c23a
 	github.com/gin-gonic/gin v1.9.1
 	github.com/jackc/pgx v3.6.2+incompatible

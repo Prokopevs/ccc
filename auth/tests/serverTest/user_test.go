@@ -59,7 +59,7 @@ func TestServer_me(t *testing.T) {
 			repo := mock_server.NewMockService(c)
 			test.mockBehavior(repo, test.ctx, test.headerValue, test.inviterId)
 
-			serv := server.NewHTTP("", nil, repo)
+			serv := server.NewHTTP("", nil, repo, "")
 
 			// Init Endpoint
 			r := gin.New()
@@ -113,7 +113,7 @@ func TestServer_referrals(t *testing.T) {
 			repo := mock_server.NewMockService(c)
 			test.mockBehavior(repo, test.ctx, test.id)
 
-			serv := server.NewHTTP("", nil, repo)
+			serv := server.NewHTTP("", nil, repo, "")
 
 			// Init Endpoint
 			r := gin.New()

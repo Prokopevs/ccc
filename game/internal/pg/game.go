@@ -38,20 +38,20 @@ func (d *db) UpdateMultiplicator(ctx context.Context, MultipUpdate *model.Multip
 	}
 
 	var m int
-	err = tx.QueryRowContext(ctx, MultiplicatorQ, MultipUpdate.Id).Scan(&m)
+	err = tx.QueryRowxContext(ctx, MultiplicatorQ, MultipUpdate.Id).Scan(&m)
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
 
 	var s int
-	err = tx.QueryRowContext(ctx, getScoreQ, MultipUpdate.Id).Scan(&s)
+	err = tx.QueryRowxContext(ctx, getScoreQ, MultipUpdate.Id).Scan(&s)
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
 
-	if m > 6 {
+	if m > 5 {
 		err = ErrMaxLevel
 		tx.Rollback()
 		return err

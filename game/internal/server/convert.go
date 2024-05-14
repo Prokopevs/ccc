@@ -8,11 +8,11 @@ import (
 )
 
 type GameResponse struct {
-	OwnerId    int `db:"ownerId"`
-	Score      int `db:"score"`
-	GasStorage int `db:"gasStorage"`
-	GasMining  int `db:"gasMining"`
-	Protection int `db:"protection"`
+	OwnerId    int `db:"ownerid" json:"ownerId"`
+	Score      int `db:"score" json:"score"`
+	GasStorage int `db:"gasstorage" json:"gasStorage"`
+	GasMining  int `db:"gasmining" json:"gasMining"`
+	Protection int `db:"protection" json:"protection"`
 }
 
 func (u *GameResponse) writeJSON(c *gin.Context) {

@@ -3,7 +3,7 @@ module github.com/Prokopevs/ccc/auth
 go 1.22.1
 
 require (
-	github.com/Prokopevs/ccc/schema v0.0.0-20240504200636-67e16efd2053
+	github.com/Prokopevs/ccc/schema v0.0.0-20240513191603-df99fc9789f2
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-playground/assert/v2 v2.2.0
 	github.com/swaggo/files v1.0.1

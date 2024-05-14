@@ -4,8 +4,8 @@ github.com/DATA-DOG/go-sqlmock v1.5.2 h1:OcvFkGmslmlZibjAjaHm3L//6LiuBgolP7Oputl
 github.com/DATA-DOG/go-sqlmock v1.5.2/go.mod h1:88MAG/4G7SMwSE3CeA0ZKzrT5CiOU3OJ+JlNzwDqpNU=
 github.com/KyleBanks/depth v1.2.1 h1:5h8fQADFrWtarTdtDudMmGsC7GPbOAu6RVB3ffsVFHc=
 github.com/KyleBanks/depth v1.2.1/go.mod h1:jzSb9d0L43HxTQfT+oSA1EEp2q+ne2uh6XgeJcm8brE=
-github.com/Prokopevs/ccc/auth v0.0.0-20240508153512-1ab3e77eeebc h1:K4LW5EVnEdCt8yfGBvXvkx/6Xu0cFHn6VCa+GCCUhpc=
-github.com/Prokopevs/ccc/auth v0.0.0-20240508153512-1ab3e77eeebc/go.mod h1:u4SJHFnutBxWnS/KC74UcbpnPqfhOINIOmDr6kSjv1U=
+github.com/Prokopevs/ccc/auth v0.0.0-20240512194025-0eaf8db9eb9f h1:eiPqRb+EpnWERNuGP4qT3YGPVZKEKLtpJvUpxKSibcY=
+github.com/Prokopevs/ccc/auth v0.0.0-20240512194025-0eaf8db9eb9f/go.mod h1:8+veVpx4el/Xo9bQt7pC0/46IjCpuEp8MrxbvHzOgUM=
 github.com/Prokopevs/ccc/schema v0.0.0-20240506151228-38d29a51c23a h1:DAuMhg8OheyiYgNiUklxzExh3Yn2vYP69rkWH2Ml/Q0=
 github.com/Prokopevs/ccc/schema v0.0.0-20240506151228-38d29a51c23a/go.mod h1:X497dNG8k/LnawF5rdOZEuvIb1UwwB6ELuTVJEYzkz8=
 github.com/bsm/ginkgo/v2 v2.12.0 h1:Ny8MWAHyOepLGlLKYmXG4IEkioBysk6GpaRTLC8zwWs=

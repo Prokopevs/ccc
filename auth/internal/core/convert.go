@@ -21,3 +21,15 @@ func convertPBUserReferralsToUserReferrals(referrals []*schema.Referrals) []*Use
 	}
 	return updatedUserReferrals
 }
+
+func convertPBUsersToUsers(users []*schema.User) []*User {
+	var updatedUsers []*User
+	for _, usr := range users {
+		updatedUsers = append(updatedUsers, &User{
+			Id:        int(usr.Id),
+			Firstname: usr.Firstname,
+			Username:  usr.Username,
+		})
+	}
+	return updatedUsers
+}

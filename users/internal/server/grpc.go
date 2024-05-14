@@ -12,6 +12,7 @@ type Service interface {
 	GetUser(ctx context.Context, id int) (*model.UserRes, bool, error)
 	IsUserWithIdExists(ctx context.Context, id int) (bool, error)
 	GetUserReferrals(ctx context.Context, id int) ([]*model.UserReferrals, bool, error)
+	GetUsers(ctx context.Context) ([]*model.UserRes, error)
 }
 
 type GRPC struct {
