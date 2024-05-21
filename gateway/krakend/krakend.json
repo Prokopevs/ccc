@@ -45,7 +45,7 @@
 				"PUT",
 				"OPTIONS"
 			],
-			"allow_origins": ["https://xyz.eridani.site"],
+			"allow_origins": ["*"],
 			"expose_headers": [
 				"Content-Length",
 				"Content-Type",
