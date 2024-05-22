@@ -4,8 +4,6 @@ services:
   gamedbCont:
     container_name: gamedbCont
     image: postgres
-    ports: 
-      - "5432:5432"
     environment:
       POSTGRES_USER: ${PG_USER}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
@@ -20,8 +18,6 @@ services:
     restart: unless-stopped
     networks:
       - api
-    ports:
-      - '6380:6379'
     command: --requirepass ${RD_PASSWORD}
     environment:
       - REDIS_PASSWORD=${RD_PASSWORD}
@@ -93,8 +89,8 @@ services:
     networks:
       - api
     environment:
-      GF_SECURITY_ADMIN_USER: krakend
-      GF_SECURITY_ADMIN_PASSWORD: krakend
+      GF_SECURITY_ADMIN_USER: ${GF_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GF_PASS}
       GF_AUT_ANONYMOUS_ENABLED: "true"
     volumes:
       - "./conf/provisioning/datasources:/etc/grafana/provisioning/datasources"
