@@ -1,8 +1,8 @@
 How to start:
     1) make build_images
     1.1) docker network create api
-    2) sudo PG_USER=postgres PG_PASSWORD= RD_PASSWORD= KEY=1234567812345678 \
-    IV=1234567812345678 TELEGRAM_TOKEN= PASSWORD=PASSWORD \
+    2) sudo PG_USER= PG_PASSWORD= RD_PASSWORD= KEY= \
+    IV= TELEGRAM_TOKEN= PASSWORD= \
     GF_USER= GF_PASS= docker-compose up
         
         (if err address already in use => sudo lsof -i :5432 => sudo kill PID) 
