@@ -3,12 +3,12 @@ version: "3"
 services:
   gamedbCont:
     container_name: gamedbCont
-    image: postgres:16-alpine3.20
+    image: postgres
+    restart: unless-stopped
     environment:
       POSTGRES_USER: ${PG_USER}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       PGDATA: /data/postgres
-      restart: unless-stopped
     volumes:
        - ./postgres:/data/postgres
     networks:
