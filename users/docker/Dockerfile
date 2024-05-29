@@ -19,6 +19,4 @@ USER nobody
 
 COPY --from=builder /app/server /app/server
 
-EXPOSE 8000
-
 ENTRYPOINT ["/app/server"]
