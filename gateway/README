@@ -13,7 +13,7 @@ How to start:
         - \q
     4) start migration 
         - cd users
-        - migrate -path schema -database "postgres://postgres:2@172.18.0.3:5432/gamedb?sslmode=disable" -verbose up
+        - migrate -path schema -database "postgres://postgres:@172.18.0.3:5432/gamedb?sslmode=disable" -verbose up
         - to find 172.23.0.2 input command: "docker inspect gamedbCont" and find field "IPAddress"
 
         
