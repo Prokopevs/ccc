@@ -94,6 +94,17 @@ services:
       - "./conf/provisioning/datasources:/etc/grafana/provisioning/datasources"
       - "./conf/provisioning/dashboards:/etc/grafana/provisioning/dashboards"
       - "./conf/data/dashboards:/var/lib/grafana/dashboards"
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    container_name: node_exporter
+    networks:
+      - api
+    command:
+      - '--path.rootfs=/host'
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - '/:/host:ro,rslave'
 
 networks:
   api:

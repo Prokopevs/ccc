@@ -14,3 +14,6 @@ scrape_configs:
         - 'krakend_ce:9090'
         labels:
           app: kotel_example
+  - job_name: node
+    static_configs:
+      - targets: ['node_exporter:9100']
