@@ -4,6 +4,7 @@
   <img style="width:230px;" src="assets/rocket1.jpeg" />
   <img style="width:230px;" src="assets/rocket2.jpeg" /> 
 </p>
+
 ---
 
 ### About the project
